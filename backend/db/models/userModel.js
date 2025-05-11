@@ -17,6 +17,11 @@ userModel = mongoose.Schema({
         type : Number,
         required : true,
     },
+    type : {
+        type : Number,
+        default : 0,
+        enum : [0,1]
+    },
     createdAt: {
         type : Date,
         date : Date.now()

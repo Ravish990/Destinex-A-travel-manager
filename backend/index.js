@@ -1,6 +1,7 @@
 const express = require('express');
 const { connectDb }= require('./db/connection');
 const userRouter = require('./routes/userRoutes')
+
 connectDb();
 
 const app = express();
@@ -12,6 +13,8 @@ app.get("/", (req,res) => {
 })
 
 app.use('/user', userRouter);
+
+app.use('/destination', require('./routes/destinationRoutes'));
 
 app.listen(8000, () => {
    console.log("server is running on port 8000")
