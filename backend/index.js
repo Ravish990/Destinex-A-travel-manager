@@ -3,6 +3,8 @@ const { connectDb }= require('./db/connection');
 const userRouter = require('./routes/userRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 
+const hotelRouter = require('./routes/hotelRoutes');
+
 connectDb();
 
 const app = express();
@@ -18,6 +20,8 @@ app.use('/user', userRouter);
 app.use('/destination', require('./routes/destinationRoutes'));
 
 app.use('/booking', bookingRouter);
+
+app.use('/hotel', hotelRouter);
 
 app.listen(8000, () => {
    console.log("server is running on port 8000")
