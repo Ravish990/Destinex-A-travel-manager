@@ -1,0 +1,63 @@
+
+.destinations-container {
+  padding: 40px;
+  text-align: center;
+  background-color: #fff;
+
+}
+
+.destinations-container h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+.cards-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  width: 250px;
+  height: 180px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+   
+  
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  padding: 15px;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: white;
+}
+
+.card-overlay p {
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.card-overlay h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}

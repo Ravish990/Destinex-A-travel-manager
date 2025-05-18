@@ -63,7 +63,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
       
       if (response.data.success) {
         setSuccess('Login successful! Redirecting...');
-        setTimeout(() => navigate('/home'), 1000);
+        setTimeout(() => navigate('/'), 1000);
       }
     } catch (error) {
       setError(error.response?.data?.message || 'Login failed. Please try again.');
@@ -119,7 +119,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
       if (response.data.success) {
         setSuccess('OTP verified successfully!');
         if (response.data.userExists) {
-          setTimeout(() => navigate('/home'), 1000);
+          setTimeout(() => navigate('/'), 1000);
         } else {
           setTimeout(() => navigate('/signup', { state: { phoneNumber: formData.phoneNumber } }), 1000);
         }

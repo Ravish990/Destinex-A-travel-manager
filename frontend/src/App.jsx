@@ -1,25 +1,36 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import AuthPage from "./pages/AuthPage";
-import HomePage from "./pages/Homepage"; 
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import './App.css';
+import Home from './components/Home';
 
-const App = () => {
+
+import AuthPage from './pages/AuthPage'
+// import PopularDestinationsIndia from './components/PopularDestinationsIndia';
+function App() {
+
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+    <Router>
+
+      <Routes>
+        <Route path='/' element={<Home />} />
+        {/* <Route path='/services' element={<Services />} />
+        <Route path='/products' element={<Products />} /> */}
+      
+        {/* <Route path='/popular-destinations-india' element={<PopularDestinationsIndia />} /> */}
+        {/* Add more routes as needed */}
+  
 
       <Route 
         path="/login" 
         element={
-          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
             <AuthPage />
-          </div>
         } 
       />
-
-      <Route path="/home" element={<HomePage />} />
-    </Routes>
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;
