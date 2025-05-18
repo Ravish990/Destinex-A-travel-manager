@@ -65,7 +65,7 @@ function Footer() {
           <div className='footer-logo'>
             <Link to='/' className='social-logo'>
               Destinex
-              <i className='fab fa-typo3' />
+              <img src="/images/logo.png" alt="Destinex Logo" className="footer-logo-img" />
             </Link>
           </div>
           <small className='website-rights'>Destinex© 2025</small>
