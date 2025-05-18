@@ -1,10 +1,13 @@
 import React from 'react';
 import './Cards.css';
+import PopularDestinationsIndia from "./PopularDestinationsIndia";
 import CardItem from './CardItem';
 
 function Cards() {
   return (
     <div className='cards'>
+      
+      <PopularDestinationsIndia />
       <h1>Check out these EPIC Destinations!</h1>
       <div className='cards__container'>
         <div className='cards__wrapper'>
@@ -41,6 +44,12 @@ function Cards() {
               label='Adrenaline'
               path='/sign-up'
             />
+            <div>
+  
+  {/* Your other section */}
+</div>
+
+
           </ul>
         </div>
       </div>

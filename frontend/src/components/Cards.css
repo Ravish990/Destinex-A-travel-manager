@@ -1,7 +1,32 @@
 .cards {
+  position: relative;
   padding: 4rem;
-  background: #fff;
+  background: linear-gradient(to top, #87ceeb, #ffffff); /* sky-blue to white */
+  overflow: hidden;
 }
+
+.cards::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background-image: url('https://www.transparenttextures.com/patterns/clouds.png');
+  animation: moveClouds 60s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes moveClouds {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+
+
 
 h1 {
   text-align: center;
