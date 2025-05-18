@@ -70,3 +70,40 @@ video {
     width: 100%;
   }
 }
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.search-input {
+  padding: 12px 20px 12px 40px;
+  font-size: 16px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  width: 300px;
+  background-color: white;
+  box-shadow: 0 0 0 4px #8dff6d; /* matches the green border in the image */
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  color: #444;
+}
+   .hero-tags {
+  text-align: center;
+  color: #fff;
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+.hashtags span {
+  margin: 0 10px;
+  color: #8dff6d;
+  font-weight: bold;
+  font-size: 1rem;
+}
