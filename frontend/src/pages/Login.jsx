@@ -1,0 +1,321 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import './Login.css';
+
+const LoginPage = ({ setIsActive, showForgotPassword }) => {
+  const [loginMethod, setLoginMethod] = useState('email');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    phoneNumber: '',
+    otp: ''
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validatePhoneNumber = (phone) => {
+    return /^\+?[\d\s-]{10,}$/.test(phone);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError('');
+    setSuccess('');
+  };
+
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    
+    if (!validateEmail(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:8000/user/login-email', {
+        email: formData.email,
+        password: formData.password
+      });
+      
+      if (response.data.success) {
+        setSuccess('Login successful! Redirecting...');
+        setTimeout(() => navigate('/home'), 1000);
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendOTP = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!validatePhoneNumber(formData.phoneNumber)) {
+      setError('Please enter a valid phone number');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:8000/user/send-otp', {
+        phoneNumber: formData.phoneNumber
+      });
+      
+      if (response.data.success) {
+        setOtpSent(true);
+        setSuccess('OTP sent successfully!');
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to send OTP. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!formData.otp || formData.otp.length < 6) {
+      setError('Please enter a valid OTP');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:8000/user/verify-otp', {
+        phoneNumber: formData.phoneNumber,
+        otp: formData.otp
+      });
+      
+      if (response.data.success) {
+        setSuccess('OTP verified successfully!');
+        if (response.data.userExists) {
+          setTimeout(() => navigate('/home'), 1000);
+        } else {
+          setTimeout(() => navigate('/signup', { state: { phoneNumber: formData.phoneNumber } }), 1000);
+        }
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'OTP verification failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderError = () => {
+    if (!error) return null;
+    return (
+      <div className="flex items-center gap-2 text-red-500 bg-red-50 p-3 rounded-lg mb-4">
+        <AlertCircle className="size-5" />
+        <span>{error}</span>
+      </div>
+    );
+  };
+
+  const renderSuccess = () => {
+    if (!success) return null;
+    return (
+      <div className="flex items-center gap-2 text-green-500 bg-green-50 p-3 rounded-lg mb-4">
+        <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>{success}</span>
+      </div>
+    );
+  };
+
+  return (
+    <div className="w-full max-w-md mx-auto">
+      {loginMethod === 'email' ? (
+        <form onSubmit={handleEmailLogin} className="space-y-6">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">SIGN IN</h1>
+            <p className="text-gray-400">Sign in to your account</p>
+          </div>
+
+          {renderError()}
+          {renderSuccess()}
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="input"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="input pr-10"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="input-eye-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="size-5 text-base-content/40" /> : <Eye className="size-5 text-base-content/40" />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed btn"
+          >
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+
+          <div className="text-center space-y-4">
+            <button
+              type="button"
+              onClick={() => {
+                setLoginMethod('otp');
+                setError('');
+                setSuccess('');
+                setOtpSent(false);
+                setFormData(prev => ({ ...prev, phoneNumber: '', otp: '' }));
+              }}
+              className="text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm btn"
+            >
+              Login with OTP instead
+            </button>
+          </div>
+        </form>
+      ) : (
+        <form onSubmit={otpSent ? handleVerifyOTP : handleSendOTP} className="space-y-6">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">OTP Login</h1>
+            <p className="text-gray-400">
+              {otpSent ? 'Enter the OTP sent to your phone' : 'Enter your phone number to receive OTP'}
+            </p>
+          </div>
+
+          {renderError()}
+          {renderSuccess()}
+
+          <div className="space-y-4">
+            {otpSent ? (
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">OTP</label>
+                <input
+                  type="text"
+                  name="otp"
+                  value={formData.otp}
+                  onChange={handleChange}
+                  className="input"
+                  placeholder="Enter OTP"
+                  required
+                />
+              </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  className="input"
+                  placeholder="Enter your phone number"
+                  required
+                />
+              </div>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed btn"
+          >
+            {loading
+              ? otpSent
+                ? 'Verifying...'
+                : 'Sending OTP...'
+              : otpSent
+                ? 'Verify OTP'
+                : 'Send OTP'}
+          </button>
+
+          <div className="text-center space-y-4">
+            {otpSent && (
+              <button
+                type="button"
+                onClick={() => {
+                  setOtpSent(false);
+                  setError('');
+                  setSuccess('');
+                  setFormData(prev => ({ ...prev, otp: '' }));
+                }}
+                className="text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm btn"
+              >
+                Resend OTP
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setLoginMethod('email');
+                setError('');
+                setSuccess('');
+                setOtpSent(false);
+                setFormData(prev => ({ ...prev, phoneNumber: '', otp: '' }));
+              }}
+              className="text-blue-400 hover:text-blue-300 transition-colors duration-200 text-sm btn"
+            >
+              Login with Email instead
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+};
+
+export default LoginPage; 
