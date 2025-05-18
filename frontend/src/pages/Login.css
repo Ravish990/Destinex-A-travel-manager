@@ -131,7 +131,7 @@ body {
 }
 
 /* Button styles */
-.btn {
+.btn-login {
   width: 100%;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: var(--text);
@@ -215,7 +215,7 @@ body {
 }
 
 /* Text styles */
-h1 {
+.overlay-title {
   font-size: 2.25rem;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -813,7 +813,7 @@ p {
   margin-bottom: 1.5rem;
   color: var(--text-muted);
 }
-.ghost {
+.ghost-login {
   background: transparent;
   border: 2px solid var(--text-light);
   color: var(--text-light);
@@ -826,7 +826,7 @@ p {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.ghost:hover {
+.ghost-login:hover {
   background: rgba(99, 102, 241, 0.1);
   color: var(--accent);
   transform: translateY(-2px);

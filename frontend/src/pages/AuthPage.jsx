@@ -23,16 +23,16 @@ const AuthPage = () => {
       <div className="overlay-container">
         <div className="overlay">
           <div className="overlay-panel overlay-left">
-            <h1>Welcome Back!</h1>
+            <h1 className='overlay-title'>Welcome Back!</h1>
             <p style={{color: 'white'}} >Ready for your next adventure? Sign in now.</p>
-            <button className="ghost" onClick={() => setIsRightPanelActive(false)}>
+            <button className="ghost-login" onClick={() => setIsRightPanelActive(false)}>
               Sign In
             </button>
           </div>
           <div className="overlay-panel overlay-right">
-            <h1>Hello, Friend!</h1>
+            <h1 className='overlay-title'>Hello, Friend!</h1>
             <p style={{color: 'white'}} >Your journey begins here. Register now!</p>
-            <button className="ghost" onClick={() => setIsRightPanelActive(true)}>
+            <button className="ghost-login" onClick={() => setIsRightPanelActive(true)}>
               Sign Up
             </button>
           </div>

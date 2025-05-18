@@ -26,10 +26,10 @@
   }
 }
 
-
-
-h1 {
+.cards__title {
   text-align: center;
+  color: #2c3e50;
+  margin-top: 2rem;
 }
 
 .cards__container {
@@ -134,6 +134,7 @@ h1 {
   .cards__items {
     display: flex;
   }
+
 }
 
 @media only screen and (max-width: 1024px) {

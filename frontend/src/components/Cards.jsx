@@ -8,7 +8,7 @@ function Cards() {
     <div className='cards'>
       
       <PopularDestinationsIndia />
-      <h1>Check out these EPIC Destinations!</h1>
+      <h1 className='cards__title'>Check out these EPIC Destinations!</h1>
       <div className='cards__container'>
         <div className='cards__wrapper'>
           <ul className='cards__items'>
