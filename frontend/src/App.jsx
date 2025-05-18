@@ -3,13 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import './App.css';
-import Home from './components/pages/Home';
-import Services from './components/pages/Services';
-import Products from './components/pages/Products';
-import SignUp from './components/pages/SignUp';
+import Home from './components/Home';
 import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 import PlannerPage from './components/PlannerPage';
 // import PopularDestinationsIndia from './components/PopularDestinationsIndia';
+import AuthPage from './pages/AuthPage';
 function App() {
 
   return (
@@ -24,6 +22,7 @@ function App() {
       
         {/* <Route path='/popular-destinations-india' element={<PopularDestinationsIndia />} /> */}
         {/* Add more routes as needed */}
+        <Route path='/login' element={<AuthPage/>} />
       </Routes>
     </Router>
   );
