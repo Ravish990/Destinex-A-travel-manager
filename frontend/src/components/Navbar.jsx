@@ -30,7 +30,7 @@ function Navbar() {
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
             Destinex
-            <i class='fab fa-typo3' />
+            <img src="/images/logo.png" alt="Destinex Logo" className="navbar-logo-img" />
           </Link>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
@@ -62,15 +62,15 @@ function Navbar() {
 
             <li>
               <Link
-                to='/sign-up'
+                to='/login'
                 className='nav-links-mobile'
                 onClick={closeMobileMenu}
               >
-                Sign Up
+                Login
               </Link>
             </li>
           </ul>
-          {button && <Button buttonStyle='btn--outline'>SIGN UP</Button>}
+          {button && <Button buttonStyle='btn--outline'>Login</Button>}
         </div>
       </nav>
     </>

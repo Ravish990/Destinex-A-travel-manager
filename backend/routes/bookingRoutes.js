@@ -9,7 +9,7 @@ router.get('/bookings/:userId', bookingController.getBooking);
 
 router.put('/bookings/:bookingId', bookingController.updateBooking);
 
-router.delete('/bookings/:bookingId', bookingController.deleteBooking);
+router.delete('/bookings/:bookingId', bookingController.cancelBooking);
 
 
 module.exports = router;

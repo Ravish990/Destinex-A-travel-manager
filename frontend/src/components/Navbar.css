@@ -34,6 +34,11 @@ html, body {
   display: flex;
   align-items: center;
 }
+.navbar-logo-img {
+  height: 50px;
+  width: auto;
+  margin-right: 10px;
+}
 
 .fa-typo3 {
   margin-left: 0.5rem;
