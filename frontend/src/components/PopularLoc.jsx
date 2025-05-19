@@ -47,7 +47,7 @@ function PopularLoc({ onClose }) {
       <h2 className="location-title">Pick your destination</h2>
       <input 
         type="text" 
-        className="location-search" 
+        className="location-search text-black" 
         placeholder="Search Indian cities..." 
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

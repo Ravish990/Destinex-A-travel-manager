@@ -23,7 +23,7 @@ const Packages = () => {
   }, [destinationId]);
 
   const handleBookNow = (pkg) => {
-    navigate(`/booking/${pkg._id}`);
+    navigate(`/package/${pkg._id}`);
   };
 
   // Get unique categories for filter

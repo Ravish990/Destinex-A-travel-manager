@@ -14,6 +14,7 @@ import Packages from './pages/Packages';
 import Booking from './pages/Booking';
 import Payment from './pages/Payment';
 import CityDestinations from './pages/CityDestinations';
+import  PackageDetail from './pages/PackageDetail';
 
 function App() {
 
@@ -37,6 +38,8 @@ function App() {
         <Route path="/payment/:packageId" element={<Payment />} />
         <Route path="/city/:cityName/destinations" element={<CityDestinations />} />
         <Route path="/destinations/:destinationId/packages" element={<Packages />} />
+        <Route path="/package/:id" element={<PackageDetail />} />
+
       </Routes>
     </Router>
   );
