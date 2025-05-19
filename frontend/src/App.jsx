@@ -1,18 +1,22 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './components/Home';
+import AuthPage from './pages/AuthPage';
+import { AuthProvider } from './context/AuthContext';
 
-
-import AuthPage from './pages/AuthPage'
 // import PopularDestinationsIndia from './components/PopularDestinationsIndia';
-function App() {
+
+// Wrapper component to conditionally render Navbar
+const AppContent = () => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
 
   return (
-    <Router>
-
+    <>
+      {!isLoginPage && <Navbar />}
       <Routes>
         <Route path='/' element={<Home />} />
         {/* <Route path='/services' element={<Services />} />
@@ -20,16 +24,20 @@ function App() {
       
         {/* <Route path='/popular-destinations-india' element={<PopularDestinationsIndia />} /> */}
         {/* Add more routes as needed */}
-  
 
-      <Route 
-        path="/login" 
-        element={
-            <AuthPage />
-        } 
-      />
+        <Route path="/login" element={<AuthPage />} />
       </Routes>
-    </Router>
+    </>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
   );
 }
 

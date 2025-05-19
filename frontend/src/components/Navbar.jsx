@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const showButton = () => {
     if (window.innerWidth <= 960) {
@@ -61,16 +69,34 @@ function Navbar() {
             </li>
 
             <li>
-              <Link
-                to='/login'
-                className='nav-links-mobile'
-                onClick={closeMobileMenu}
-              >
-                Login
-              </Link>
+              {!isAuthenticated ? (
+                <Link
+                  to='/login'
+                  className='nav-links-mobile'
+                  onClick={closeMobileMenu}
+                >
+                  Login
+                </Link>
+              ) : (
+                <button
+                  className='nav-links-mobile'
+                  onClick={() => {
+                    closeMobileMenu();
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </button>
+              )}
             </li>
           </ul>
-          {button && <Button buttonStyle='btn--outline'>Login</Button>}
+          {button && (
+            isAuthenticated ? (
+              <Button buttonStyle='btn--outline' onClick={handleLogout}>Logout</Button>
+            ) : (
+              <Button buttonStyle='btn--outline'>Login</Button>
+            )
+          )}
         </div>
       </nav>
     </>

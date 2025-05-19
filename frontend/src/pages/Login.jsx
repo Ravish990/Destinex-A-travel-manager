@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './Login.css';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = ({ setIsActive, showForgotPassword }) => {
   const [loginMethod, setLoginMethod] = useState('email');
@@ -20,6 +21,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
   const [success, setSuccess] = useState('');
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -62,6 +64,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
       });
       
       if (response.data.success) {
+        login(response.data.user);
         setSuccess('Login successful! Redirecting...');
         setTimeout(() => navigate('/'), 1000);
       }
