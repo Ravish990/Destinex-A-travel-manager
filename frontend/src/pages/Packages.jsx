@@ -62,7 +62,7 @@ const Packages = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Hero Section */}
       <div className="relative bg-cover bg-center h-80" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80')" }}>
         <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/70 to-blue-900/30"></div>
@@ -78,51 +78,34 @@ const Packages = () => {
         </div>
       </div>
 
-      {/* Content Section */}
-      <div className="container mx-auto px-4 py-12">
-        {/* Category Filters */}
-        {categories.length > 1 && (
-          <div className="flex flex-wrap justify-center mb-12 gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  selectedCategory === category
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border border-gray-200'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        )}
-
+      {/* Content Section - full width, no right white space */}
+      <div className="w-full px-2 py-12 flex-grow">
         {/* Package Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        style={{marginLeft: '50px', marginRight: '50px', marginTop: '30px',marginBottom: '30px'}}
+        >
           {filteredPackages.map((pkg) => (
             <div
               key={pkg._id}
-              className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1"
+              className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-300 p-10"
             >
               {/* Package Image */}
               <div className="relative h-56 overflow-hidden">
                 <img
-                  src={pkg.image}
+                  src={pkg.image || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'}
                   alt={pkg.name}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
                 {pkg.category && (
-                  <span className="absolute top-4 right-4 bg-white/90 text-blue-800 text-xs font-bold px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">
+                  <div className="absolute top-6 left-0 bg-blue-600 text-white py-1 px-4 font-medium text-sm shadow-md">
                     {pkg.category}
-                  </span>
+                  </div>
                 )}
               </div>
 
               {/* Package Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+              <div className="p-3">
+                <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                   {pkg.name}
                 </h3>
                 <div className="w-10 h-1 bg-blue-500 rounded mb-4"></div>
@@ -131,37 +114,24 @@ const Packages = () => {
                 </p>
 
                 {/* Price and Button */}
-                <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center justify-between">
                   <div className="text-gray-900 font-bold text-2xl">
                     ₹{pkg.price}
                   </div>
                   <button
                     onClick={() => handleBookNow(pkg)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-lg transition-colors duration-200 shadow-sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200 shadow-md"
                   >
                     View Package
                   </button>
                 </div>
-
-                {/* Features */}
-                {pkg.features && (
-                  <div className="mt-4 pt-4 border-t border-gray-100">
-                    <div className="flex flex-wrap gap-2">
-                      {pkg.features.slice(0, 3).map((feature, index) => (
-                        <span key={index} className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           ))}
         </div>
 
         {/* Empty State */}
-        {filteredPackages.length === 0 && (
+        {filteredPackages.length === 0 && !loading && (
           <div className="text-center py-16">
             <div className="bg-blue-50 inline-block p-4 rounded-full mb-4">
               <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,24 +140,52 @@ const Packages = () => {
             </div>
             <h3 className="text-xl font-medium text-gray-900 mb-2">No packages found</h3>
             <p className="text-gray-600 max-w-md mx-auto">
-              We couldn't find any packages matching your criteria. Please try another category or check back later.
+              We couldn't find any packages for this destination. Please check back later.
             </p>
           </div>
         )}
       </div>
 
-      {/* Call to Action Section */}
-      <div className="bg-blue-800 py-12 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Need Help Finding the Perfect Package?</h2>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-            Our travel experts are ready to help you plan your dream vacation with personalized recommendations.
-          </p>
-          <button className="bg-white text-blue-800 hover:bg-blue-50 font-medium px-8 py-3 rounded-lg shadow-md transition-colors duration-200">
-            Contact Our Travel Experts
-          </button>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white mt-12 w-full">
+        <div className="max-w-7xl mx-auto py-12 px-4 flex flex-col items-center w-full" style={{marginLeft: '50px', marginRight: '50px', marginTop: '30px',marginBottom: '30px'}}>
+          {/* Destinex Logo Centered */}
+          <div className="mb-6 flex flex-col items-center">
+            <img src="/images/logo.png" alt="Destinex Logo" className="h-12 w-auto mb-2" />
+            <h2 className="text-2xl font-bold tracking-wide">Destinex</h2>
+            <p className="text-gray-400 text-sm mt-2 text-center max-w-xs">Explore the world with confidence and comfort.</p>
+          </div>
+          {/* Footer Links and Socials */}
+          <div className="w-full flex flex-col md:flex-row justify-center md:justify-between items-center gap-8 mt-8">
+            {/* Quick Links */}
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <h3 className="font-semibold mb-2">Quick Links</h3>
+              <a href="#" className="text-gray-300 hover:text-white transition">Home</a>
+              <a href="#" className="text-gray-300 hover:text-white transition">Packages</a>
+              <a href="#" className="text-gray-300 hover:text-white transition">Contact</a>
+            </div>
+            {/* Contact Info */}
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <h3 className="font-semibold mb-2">Contact</h3>
+              <span className="text-gray-300">info@destinex.com</span>
+              <span className="text-gray-300">+91 12345 67890</span>
+            </div>
+            {/* Socials */}
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <h3 className="font-semibold mb-2">Follow Us</h3>
+              <div className="flex gap-3">
+                <a href="#" className="text-gray-300 hover:text-white transition"><i className="fab fa-facebook-f"></i></a>
+                <a href="#" className="text-gray-300 hover:text-white transition"><i className="fab fa-twitter"></i></a>
+                <a href="#" className="text-gray-300 hover:text-white transition"><i className="fab fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+          {/* Copyright Bar */}
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm w-full">
+            <p>Destinex © 2025. All rights reserved.</p>
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 };
