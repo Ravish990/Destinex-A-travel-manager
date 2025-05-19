@@ -1,5 +1,6 @@
 // src/components/PopularLoc.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './PopularLoc.css';
 
 const indianLocations = [
@@ -26,6 +27,13 @@ const indianLocations = [
 ];
 
 function PopularLoc({ onClose }) {
+  const navigate = useNavigate(); // ✅ use it here
+
+  const handleLocationClick = (city) => {
+    navigate(`/destination/${city}`);
+    onClose(); // Optional: close popup after navigation
+  };
+
   return (
     <div className="location-popup">
       <button 
@@ -43,7 +51,12 @@ function PopularLoc({ onClose }) {
       />
       <ul className="location-list">
         {indianLocations.map((loc, index) => (
-          <li key={index} className="location-item">
+          <li 
+            key={index} 
+            className="location-item" 
+            onClick={() => handleLocationClick(loc.name)} // ✅ Add click handler
+            style={{ cursor: 'pointer' }} // Optional: improve UX
+          >
             <span className="location-name">{loc.name}</span>
             {loc.tag && (
               <span className={`tag ${loc.tag.toLowerCase().replace(/\s+/g, '-')}`}>
@@ -56,5 +69,4 @@ function PopularLoc({ onClose }) {
     </div>
   );
 }
-
 export default PopularLoc;

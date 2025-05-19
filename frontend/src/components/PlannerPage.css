@@ -12,18 +12,24 @@
 }
 
 .option {
-  background: #f2f2f2;
-  padding: 1rem 2rem;
-  border-radius: 15px;
+  background: #f9f9f9;
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
   position: relative;
+  color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-width: 160px;
+  text-align: center;
 }
 
 .option:hover {
   background: #ffe88f;
+  transform: translateY(-4px);
 }
+
 
 .highlighted {
   background: #ffde59;
@@ -38,3 +44,153 @@
   margin-left: 5px;
 }
 
+.traveller-options {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.traveller-card {
+  background: white;
+  color: black;
+  padding: 1.5rem 2rem;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.traveller-card:hover {
+  transform: scale(1.05);
+}
+.results-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  margin-top: 2rem;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.results-card ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  color: #333;
+}
+
+.results-card h3 {
+  color: #222;
+  margin-top: 1rem;
+}
+.selected {
+  background: #ffde59;
+  border: 2px solid #f3c400;
+  font-weight: bold;
+}
+
+.card-options {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.card-option {
+  width: 160px;
+  height: 220px;
+  background: #fff;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-option:hover {
+  transform: translateY(-5px);
+}
+
+.card-option.selected {
+  border: 2px solid #0bb36e;
+  background: #f1fff8;
+}
+
+.card-image-circle {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(to bottom, #d2c9f3, #f7f7f7);
+  border-radius: 50%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.moon-icon {
+  width: 40px;
+  height: 40px;
+  background: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+
+.card-label {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  color: #333;
+}
+
+.badge-top-left {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #00a76f;
+  color: white;
+  font-size: 0.5rem;
+  padding: 2px 6px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.checkmark {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #00a76f;
+  color: white;
+  width: 20px;
+  height: 20px;
+  font-size: 0.9rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-image-circle {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(to bottom, #d2c9f3, #f7f7f7);
+  border-radius: 50%;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  font-size: 2.5rem;
+}

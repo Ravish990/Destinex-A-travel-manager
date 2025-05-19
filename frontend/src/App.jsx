@@ -8,23 +8,22 @@ import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 import PlannerPage from './components/PlannerPage';
 // import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 import AuthPage from './pages/AuthPage';
+import HeroSection from './components/HeroSection';
+import DestinationPage from './components/DestinationPage';//this is new i have done
 function App() {
 
   return (
-    <Router>
+   // App.js
+<Router>
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/planner/:locationId" element={<PlannerPage />} />
+    <Route path="/destination/:cityName" element={<DestinationPage />} />
+    <Route path="/login" element={<AuthPage />} />
+  </Routes>
+</Router>
 
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path="/" element={<PopularDestinationsIndia />} />
-        <Route path="/planner/:locationId" element={<PlannerPage />} />
-        {/* <Route path='/services' element={<Services />} />
-        <Route path='/products' element={<Products />} /> */}
-      
-        {/* <Route path='/popular-destinations-india' element={<PopularDestinationsIndia />} /> */}
-        {/* Add more routes as needed */}
-        <Route path='/login' element={<AuthPage/>} />
-      </Routes>
-    </Router>
+    
   );
 }
 
