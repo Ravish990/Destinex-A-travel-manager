@@ -96,24 +96,44 @@ const PlannerPage = () => {
   </>
 )}
 
-      {step === 3 && (
-        <div className="results-card">
-          <h3>Top Tourist Places in {formattedLocation}</h3>
-          <ul>
-            {data.places.map((place, idx) => (
-              <li key={idx}>{place}</li>
-            ))}
-          </ul>
-          <h3>Recommended Hotels</h3>
-          <ul>
-            {data.hotels.map((hotel, idx) => (
-              <li key={idx}>{hotel}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+     {step === 3 && (
+  <div className="results-wrapper">
+    <div className="results-heading">
+      <h2>Holiday Plan Summary</h2>
+      <p>
+        Destination: <strong>{formattedLocation}</strong> <br />
+        Duration: <strong>{duration}</strong> <br />
+        Group: <strong>{groupType}</strong>
+      </p>
+    </div>
+
+    <div className="results-section">
+      <h3>Top Tourist Places in {formattedLocation}</h3>
+      <div className="card-list">
+        {data.places.map((place, idx) => (
+          <div className="info-card" key={idx}>
+            <div className="card-icon">📍</div>
+            <div className="card-content">{place}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div className="results-section">
+      <h3>Recommended Hotels</h3>
+      <div className="card-list">
+        {data.hotels.map((hotel, idx) => (
+          <div className="info-card" key={idx}>
+            <div className="card-icon">🏨</div>
+            <div className="card-content">{hotel}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
-};
+}
 
 export default PlannerPage;

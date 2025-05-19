@@ -194,3 +194,54 @@
 .icon {
   font-size: 2.5rem;
 }
+.results-wrapper {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 700px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: #222;
+}
+
+.results-heading {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.results-heading h2 {
+  color: #ffb800;
+  margin-bottom: 0.5rem;
+}
+
+.results-section h3 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  flex: 1 1 calc(50% - 1rem);
+  min-width: 250px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+.card-content {
+  font-size: 1rem;
+}
