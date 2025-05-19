@@ -1,4 +1,5 @@
 const destinationSchema = require('../db/models/destinationModel');
+const Package = require('../db/models/packageModel');
 
 const createPlaces = async(req, res) => {
     try {
@@ -184,6 +185,17 @@ const getAllCities = async (req, res) => {
     }
 };
 
+// Get packages for a destination (RESTful)
+const getPackagesByDestinationId = async (req, res) => {
+  try {
+    const { destinationId } = req.params;
+    const packages = await Package.find({ destination: destinationId, isDeleted: false });
+    res.status(200).json({ message: 'Packages fetched successfully', data: packages });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching packages', error: error.message });
+  }
+};
+
 module.exports = {
     createPlaces,
     getAllPlaces,
@@ -197,5 +209,6 @@ module.exports = {
     getPlacesByLocationAndCategory,
     getPlacesByLocationAndRating,
     getPlacesByNameAndCategory,
-    getAllCities
+    getAllCities,
+    getPackagesByDestinationId,
 }

@@ -13,6 +13,7 @@ import CityList from './pages/CityList';
 import Packages from './pages/Packages';
 import Booking from './pages/Booking';
 import Payment from './pages/Payment';
+import CityDestinations from './pages/CityDestinations';
 
 function App() {
 
@@ -34,6 +35,8 @@ function App() {
         <Route path="/packages/:destinationId" element={<Packages />} />
         <Route path="/booking/:packageId" element={<Booking />} />
         <Route path="/payment/:packageId" element={<Payment />} />
+        <Route path="/city/:cityName/destinations" element={<CityDestinations />} />
+        <Route path="/destinations/:destinationId/packages" element={<Packages />} />
       </Routes>
     </Router>
   );

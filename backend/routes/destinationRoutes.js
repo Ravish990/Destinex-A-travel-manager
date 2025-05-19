@@ -30,4 +30,7 @@ router.get('/places/name/:name/category/:category', destinationController.getPla
 // Get all unique cities (locations)
 router.get('/cities', destinationController.getAllCities);
 
+// RESTful: Get packages for a destination
+router.get('/destinations/:destinationId/packages', destinationController.getPackagesByDestinationId);
+
 module.exports = router;
