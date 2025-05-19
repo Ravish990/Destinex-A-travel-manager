@@ -79,10 +79,10 @@ const Packages = () => {
       </div>
 
       {/* Content Section - full width, no right white space */}
-      <div className="w-full px-2 py-12 flex-grow">
+      <div className="w-full px-2 py-12 flex-grow" >
         {/* Package Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        style={{marginLeft: '50px', marginRight: '50px', marginTop: '30px',marginBottom: '30px'}}
+        style={{marginLeft: '50px', marginRight: '50px', marginTop: '30px',marginBottom: '30px'} }
         >
           {filteredPackages.map((pkg) => (
             <div
@@ -90,7 +90,7 @@ const Packages = () => {
               className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-300 p-10"
             >
               {/* Package Image */}
-              <div className="relative h-56 overflow-hidden">
+              <div className="relative h-56 overflow-hidden" style={{padding: '20px'}}>
                 <img
                   src={pkg.image || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'}
                   alt={pkg.name}
@@ -104,7 +104,7 @@ const Packages = () => {
               </div>
 
               {/* Package Content */}
-              <div className="p-3">
+              <div style={{padding: '20px'}}>
                 <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                   {pkg.name}
                 </h3>
