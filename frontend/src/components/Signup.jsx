@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Eye, EyeOff, AlertCircle } from 'lucide-react'
+import axios from '../utils/axios'
 
 const Signup = ({ setIsActive, phoneNumber, onSignupSuccess }) => {
     const [formData, setFormData ] = useState({
@@ -94,7 +94,7 @@ const Signup = ({ setIsActive, phoneNumber, onSignupSuccess }) => {
 
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:8000/user/signup', formData);
+            const response = await axios.post('/user/signup', formData);
 
             if (response.data.success) {
                 setSuccess('Account created successfully!');

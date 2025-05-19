@@ -2,7 +2,7 @@ const destinationSchema = require('../db/models/destinationModel');
 
 const createPlaces = async(req, res) => {
     try {
-        const { name, description, image, location, latitude, longitude, rating, reviews, price, category } = req.body;
+        const { name, description, image, location, latitude, longitude, rating, reviews, category } = req.body;
         const newDestination = new destinationSchema({
             name,
             description,
@@ -12,7 +12,6 @@ const createPlaces = async(req, res) => {
             longitude,
             rating,
             reviews,
-            price,
             category
         });
         await newDestination.save();
@@ -20,7 +19,6 @@ const createPlaces = async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error creating destination', error: error.message });
     }
-
 }
 
 const getAllPlaces = async (req, res) => {
@@ -48,7 +46,7 @@ const getPlaceById = async (req, res) => {
 const updatePlace = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, image, location, latitude, longitude, rating, reviews, price, category } = req.body;
+        const { name, description, image, location, latitude, longitude, rating, reviews, category } = req.body;
         const destination = await destinationSchema.findById(id);
         if (!destination || destination.isDeleted) {
             return res.status(404).json({ message: 'Destination not found' });
@@ -61,7 +59,6 @@ const updatePlace = async (req, res) => {
         destination.longitude = longitude || destination.longitude;
         destination.rating = rating || destination.rating;
         destination.reviews = reviews || destination.reviews;
-        destination.price = price || destination.price;
         destination.category = category || destination.category;
         await destination.save();
         res.status(200).json({ message: 'Destination updated successfully', data: destination });
@@ -124,19 +121,6 @@ const getPlacesByRating = async (req, res) => {
         res.status(500).json({ message: 'Error fetching destinations', error: error.message });
     }
 }
-const getPlacesByPrice = async (req, res) => {
-    try {
-        const { price } = req.params;
-        const destinations = await destinationSchema.find({ price, isDeleted: false });
-        if (destinations.length === 0) {
-            return res.status(404).json({ message: 'No destinations found for this price' });
-        }
-        res.status(200).json({ message: 'Destinations fetched successfully', data: destinations });
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Error fetching destinations', error: error.message });
-    }
-}
 const getPlacesByName = async (req, res) => {
     try {
         const { name } = req.params;
@@ -176,61 +160,6 @@ const getPlacesByLocationAndRating = async (req, res) => {
         res.status(500).json({ message: 'Error fetching destinations', error: error.message });
     }
 }
-const getPlacesByLocationAndPrice = async (req, res) => {
-    try {
-        const { location, price } = req.params;
-        const destinations = await destinationSchema.find({ location, price, isDeleted: false });
-        if (destinations.length === 0) {
-            return res.status(404).json({ message: 'No destinations found for this location and price' });
-        }
-        res.status(200).json({ message: 'Destinations fetched successfully', data: destinations });
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Error fetching destinations', error: error.message });
-    }
-}
-
-const getPlacesByCategoryAndRating = async (req, res) => {
-    try {
-        const { category, rating } = req.params;
-        const destinations = await destinationSchema.find({ category, rating, isDeleted: false });
-        if (destinations.length === 0) {
-            return res.status(404).json({ message: 'No destinations found for this category and rating' });
-        }
-        res.status(200).json({ message: 'Destinations fetched successfully', data: destinations });
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Error fetching destinations', error: error.message });
-    }
-}
-
-const getPlacesByCategoryAndPrice = async (req, res) => {
-    try {
-        const { category, price } = req.params;
-        const destinations = await destinationSchema.find({ category, price, isDeleted: false });
-        if (destinations.length === 0) {
-            return res.status(404).json({ message: 'No destinations found for this category and price' });
-        }
-        res.status(200).json({ message: 'Destinations fetched successfully', data: destinations });
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Error fetching destinations', error: error.message });
-    }
-}
-
-const getPlacesByRatingAndPrice = async (req, res) => {
-    try {
-        const { rating, price } = req.params;
-        const destinations = await destinationSchema.find({ rating, price, isDeleted: false });
-        if (destinations.length === 0) {
-            return res.status(404).json({ message: 'No destinations found for this rating and price' });
-        }
-        res.status(200).json({ message: 'Destinations fetched successfully', data: destinations });
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Error fetching destinations', error: error.message });
-    }
-}
 const getPlacesByNameAndCategory = async (req, res) => {
     try {
         const { name, category } = req.params;
@@ -245,6 +174,16 @@ const getPlacesByNameAndCategory = async (req, res) => {
     }
 }
 
+// Get all unique cities (locations)
+const getAllCities = async (req, res) => {
+    try {
+        const cities = await destinationSchema.distinct('location', { isDeleted: false });
+        res.status(200).json({ message: 'Cities fetched successfully', data: cities });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching cities', error: error.message });
+    }
+};
+
 module.exports = {
     createPlaces,
     getAllPlaces,
@@ -254,13 +193,9 @@ module.exports = {
     getPlacesByCategory,
     getPlacesByLocation,
     getPlacesByRating,
-    getPlacesByPrice,
     getPlacesByName,
     getPlacesByLocationAndCategory,
     getPlacesByLocationAndRating,
-    getPlacesByLocationAndPrice,
-    getPlacesByCategoryAndRating,
-    getPlacesByCategoryAndPrice,
-    getPlacesByRatingAndPrice,
-    getPlacesByNameAndCategory
+    getPlacesByNameAndCategory,
+    getAllCities
 }

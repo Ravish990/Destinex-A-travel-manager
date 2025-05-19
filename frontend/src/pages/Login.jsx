@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './Login.css';
 import { useAuth } from '../context/AuthContext';
+import axios from '../utils/axios';
 
 const LoginPage = ({ setIsActive, showForgotPassword }) => {
   const [loginMethod, setLoginMethod] = useState('email');
@@ -58,13 +58,15 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/user/login-email', {
+      const response = await axios.post('/user/login-email', {
         email: formData.email,
         password: formData.password
       });
       
       if (response.data.success) {
-        login(response.data.user);
+        // Store token and user data
+        const { token, user } = response.data;
+        login(user, token);
         setSuccess('Login successful! Redirecting...');
         setTimeout(() => navigate('/'), 1000);
       }
@@ -87,7 +89,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/user/send-otp', {
+      const response = await axios.post('/user/send-otp', {
         phoneNumber: formData.phoneNumber
       });
       
@@ -114,7 +116,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/user/verify-otp', {
+      const response = await axios.post('/user/verify-otp', {
         phoneNumber: formData.phoneNumber,
         otp: formData.otp
       });
@@ -122,6 +124,9 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
       if (response.data.success) {
         setSuccess('OTP verified successfully!');
         if (response.data.userExists) {
+          // Store token and user data for OTP login
+          const { token, user } = response.data;
+          login(user, token);
           setTimeout(() => navigate('/'), 1000);
         } else {
           setTimeout(() => navigate('/signup', { state: { phoneNumber: formData.phoneNumber } }), 1000);
