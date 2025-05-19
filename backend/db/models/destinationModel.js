@@ -37,6 +37,11 @@ const destinationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  city: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'City',
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
