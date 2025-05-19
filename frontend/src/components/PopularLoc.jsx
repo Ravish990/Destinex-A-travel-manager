@@ -1,31 +1,33 @@
 // src/components/PopularLoc.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './PopularLoc.css';
 
-const indianLocations = [
-  { name: 'Goa', tag: 'POPULAR' },
-  { name: 'Kerala', tag: 'IN SEASON' },
-  { name: 'Rishikesh', tag: 'BUDGET' },
-  { name: 'Jaipur', tag: 'POPULAR' },
-  { name: 'Darjeeling', tag: 'HONEYMOON' },
-  { name: 'Udaipur', tag: 'HONEYMOON' },
-  { name: 'Shimla', tag: 'HONEYMOON' },
-  { name: 'Leh-Ladakh', tag: 'TRENDING' },
-  { name: 'Andaman Islands', tag: 'HONEYMOON' },
-  { name: 'Kolkata', tag: 'POPULAR' },
-  { name: 'Delhi', tag: 'POPULAR' },
-  { name: 'Mumbai', tag: 'POPULAR' },
-  { name: 'Bangalore', tag: 'POPULAR' },
-  { name: 'Hyderabad', tag: 'POPULAR' },
-  { name: 'Chennai', tag: 'POPULAR' },
-  { name: 'Pune', tag: 'POPULAR' },
-  { name: 'Ahmedabad', tag: 'POPULAR' },
-  { name: 'Lucknow', tag: 'POPULAR' },
-  { name: 'Varanasi', tag: 'POPULAR' },
-  { name: 'Hampi', tag: 'TRENDING' }
-];
-
 function PopularLoc({ onClose }) {
+  const [locations, setLocations] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/destination/places')
+      .then((res) => {
+        const data = Array.isArray(res.data) ? res.data : res.data.data;
+        if (Array.isArray(data)) {
+          setLocations(data);
+        } else {
+          throw new Error('Invalid response format');
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch locations:', err);
+        setError('Could not load destinations.');
+      });
+  }, []);
+
+  const filteredLocations = locations.filter((loc) =>
+    loc.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="location-popup">
       <button 
@@ -40,9 +42,14 @@ function PopularLoc({ onClose }) {
         type="text" 
         className="location-search" 
         placeholder="Search Indian cities..." 
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
+
+      {error && <p className="error">{error}</p>}
+
       <ul className="location-list">
-        {indianLocations.map((loc, index) => (
+        {filteredLocations.map((loc, index) => (
           <li key={index} className="location-item">
             <span className="location-name">{loc.name}</span>
             {loc.tag && (
