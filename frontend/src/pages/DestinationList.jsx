@@ -37,9 +37,6 @@ const DestinationList = ({ destinations }) => {
               <span>
                 <strong>Rating:</strong> {dest.rating} ⭐
               </span>
-              <span>
-                <strong>Price:</strong> ${dest.price}
-              </span>
             </div>
           </div>
         </div>

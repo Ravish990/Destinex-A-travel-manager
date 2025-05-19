@@ -19,16 +19,12 @@ router.delete('/places/:id', destinationController.deletePlace);
 router.get('/places/category/:category', destinationController.getPlacesByCategory);
 router.get('/places/location/:location', destinationController.getPlacesByLocation);
 router.get('/places/rating/:rating', destinationController.getPlacesByRating);
-router.get('/places/price/:price', destinationController.getPlacesByPrice);
 router.get('/places/name/:name', destinationController.getPlacesByName);
 
 // Combined Filters
 router.get('/places/location/:location/category/:category', destinationController.getPlacesByLocationAndCategory);
 router.get('/places/location/:location/rating/:rating', destinationController.getPlacesByLocationAndRating);
-router.get('/places/location/:location/price/:price', destinationController.getPlacesByLocationAndPrice);
-router.get('/places/category/:category/rating/:rating', destinationController.getPlacesByCategoryAndRating);
-router.get('/places/category/:category/price/:price', destinationController.getPlacesByCategoryAndPrice);
-router.get('/places/rating/:rating/price/:price', destinationController.getPlacesByRatingAndPrice);
+// router.get('/places/category/:category/rating/:rating', destinationController.getPlacesByCategoryAndRating);
 router.get('/places/name/:name/category/:category', destinationController.getPlacesByNameAndCategory);
 
 // Get all unique cities (locations)

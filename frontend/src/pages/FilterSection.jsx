@@ -8,7 +8,6 @@ const prices = [1000, 500, 200]; // example thresholds
 const FilterSection = ({ setDestinations }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedRating, setSelectedRating] = useState('');
-  const [selectedPrice, setSelectedPrice] = useState('');
 
   const fetchFilteredData = async () => {
     try {
@@ -16,14 +15,10 @@ const FilterSection = ({ setDestinations }) => {
 
       if (selectedCategory && selectedRating) {
         url = `http://localhost:8000/destination/places/category/${selectedCategory}/rating/${selectedRating}`;
-      } else if (selectedCategory && selectedPrice) {
-        url = `http://localhost:8000/destination/places/category/${selectedCategory}/price/${selectedPrice}`;
       } else if (selectedCategory) {
         url = `http://localhost:8000/destination/places/category/${selectedCategory}`;
       } else if (selectedRating) {
         url = `http://localhost:8000/destination/places/rating/${selectedRating}`;
-      } else if (selectedPrice) {
-        url = `http://localhost:8000/destination/places/price/${selectedPrice}`;
       }
 
       const res = await axios.get(url);
@@ -36,7 +31,7 @@ const FilterSection = ({ setDestinations }) => {
 
   useEffect(() => {
     fetchFilteredData();
-  }, [selectedCategory, selectedRating, selectedPrice]);
+  }, [selectedCategory, selectedRating]);
 
   return (
     <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md mx-auto md:mx-0">
@@ -68,21 +63,6 @@ const FilterSection = ({ setDestinations }) => {
           <option value="">All Ratings</option>
           {ratings.map((rate) => (
             <option key={rate} value={rate}>{rate} stars & up</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Price Filter */}
-      <div className="mb-2">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
-        <select
-          value={selectedPrice}
-          onChange={(e) => setSelectedPrice(e.target.value)}
-          className="block w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition"
-        >
-          <option value="">All Prices</option>
-          {prices.map((price) => (
-            <option key={price} value={price}>Under ₹{price}</option>
           ))}
         </select>
       </div>
