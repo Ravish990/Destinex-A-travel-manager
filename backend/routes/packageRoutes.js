@@ -8,7 +8,7 @@ const {
     deletePackage,
     getPackagesByCategory,
     getPackagesByDifficulty,
-} = require('../controllers/packageController');
+} = require('../controller/packageController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
 // Public routes
@@ -28,6 +28,6 @@ router.route('/difficulty/:difficulty')
     .get(getPackagesByDifficulty);
 
 router.route('/destination/:destinationId')
-    .get(require('../controllers/packageController').getPackagesByDestination);
+    .get(require('../controller/packageController').getPackagesByDestination);
 
 module.exports = router; 
