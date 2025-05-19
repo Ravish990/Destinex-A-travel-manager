@@ -16,7 +16,7 @@ const mongoose = require('mongoose');
 
 const getDestinationsByCity = async (req, res) => {
   const { cityId } = req.params;
-  console.log('Controller hit — cityId:', cityId);
+
 
   if (!mongoose.Types.ObjectId.isValid(cityId)) {
     console.log("Invalid city ID:", cityId);
