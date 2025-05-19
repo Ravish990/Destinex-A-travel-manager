@@ -31,4 +31,7 @@ router.get('/places/category/:category/price/:price', destinationController.getP
 router.get('/places/rating/:rating/price/:price', destinationController.getPlacesByRatingAndPrice);
 router.get('/places/name/:name/category/:category', destinationController.getPlacesByNameAndCategory);
 
+// Get all unique cities (locations)
+router.get('/cities', destinationController.getAllCities);
+
 module.exports = router;

@@ -245,6 +245,16 @@ const getPlacesByNameAndCategory = async (req, res) => {
     }
 }
 
+// Get all unique cities (locations)
+const getAllCities = async (req, res) => {
+    try {
+        const cities = await destinationSchema.distinct('location', { isDeleted: false });
+        res.status(200).json({ message: 'Cities fetched successfully', data: cities });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching cities', error: error.message });
+    }
+};
+
 module.exports = {
     createPlaces,
     getAllPlaces,
@@ -262,5 +272,6 @@ module.exports = {
     getPlacesByCategoryAndRating,
     getPlacesByCategoryAndPrice,
     getPlacesByRatingAndPrice,
-    getPlacesByNameAndCategory
+    getPlacesByNameAndCategory,
+    getAllCities
 }

@@ -1,29 +1,46 @@
-import React from "react";
+// DestinationList.jsx
+import React from 'react';
 
-const DestinationList = ({ visibleCount, destination }) => {
-  const dummyCards = Array.from({ length: 12 }, (_, i) => i + 1);
+const DestinationList = ({ destinations }) => {
+  if (!Array.isArray(destinations)) {
+    return (
+      <div className="text-center py-10 text-gray-500 text-lg">
+        No destinations available.
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {dummyCards.slice(0, visibleCount).map((num) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
+      {destinations.map((dest) => (
         <div
-          key={num}
-          className="bg-white rounded-lg shadow-md p-4 flex gap-4"
+          key={dest._id}
+          className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group"
         >
-          <div className="w-1/3 bg-gray-200 h-40 rounded flex items-center justify-center">
-            <span className="text-gray-600 text-lg">Image {num}</span>
+          <div className="relative overflow-hidden">
+            <img
+              src={dest.image}
+              alt={dest.name}
+              className="w-full h-52 object-cover transform group-hover:scale-105 transition-transform duration-300"
+            />
+            <span className="absolute top-2 left-2 bg-indigo-600 text-white text-xs px-3 py-1 rounded-full shadow">
+              {dest.category}
+            </span>
           </div>
-          <div className="w-2/3">
-            <div className="text-xl font-semibold text-black">
-              {destination} Resort {num}
+
+          <div className="p-5 space-y-2">
+            <h2 className="text-2xl font-bold text-gray-800">{dest.name}</h2>
+            <p className="text-gray-500 text-sm">{dest.location}</p>
+            <p className="text-gray-700 text-sm line-clamp-3">{dest.description}</p>
+
+            <div className="flex justify-between items-center pt-2 text-sm text-gray-700">
+              <span>
+                <strong>Rating:</strong> {dest.rating} ⭐
+              </span>
+              <span>
+                <strong>Price:</strong> ${dest.price}
+              </span>
             </div>
-            <div className="text-sm text-gray-500">Tags and Icons</div>
-            <div className="mt-2 text-green-600">Features</div>
-            <div className="mt-2 text-gray-700">Includes: Description</div>
-            <div className="mt-2 font-bold text-lg text-black">₹ Amount / couple</div>
-            <button className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">
-              View Details
-            </button>
           </div>
         </div>
       ))}

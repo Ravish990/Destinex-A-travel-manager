@@ -9,6 +9,11 @@ import PlannerPage from './components/PlannerPage';
 import Explore from './pages/Explore';
 // import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 import AuthPage from './pages/AuthPage';
+import CityList from './pages/CityList';
+import Packages from './pages/Packages';
+import Booking from './pages/Booking';
+import Payment from './pages/Payment';
+
 function App() {
 
   return (
@@ -17,6 +22,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/" element={<PopularDestinationsIndia />} />
+        <Route path="/cities" element={<CityList />} />
         <Route path="/planner/:locationId" element={<PlannerPage />} />
         {/* <Route path='/services' element={<Services />} />
         <Route path='/products' element={<Products />} /> */}
@@ -25,6 +31,9 @@ function App() {
         {/* Add more routes as needed */}
         <Route path='/login' element={<AuthPage/>} />
         <Route path='/explore' element={<Explore />} />
+        <Route path="/packages/:destinationId" element={<Packages />} />
+        <Route path="/booking/:packageId" element={<Booking />} />
+        <Route path="/payment/:packageId" element={<Payment />} />
       </Routes>
     </Router>
   );
