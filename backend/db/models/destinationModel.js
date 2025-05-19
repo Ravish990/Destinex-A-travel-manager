@@ -33,10 +33,6 @@ const destinationSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  price: {
-    type: Number,
-    required: true,
-  },
   category: {
     type: String,
     required: true,

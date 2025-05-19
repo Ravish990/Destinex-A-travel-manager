@@ -70,7 +70,6 @@ const Explore = () => {
                   <p className="text-sm text-gray-600 line-clamp-3">{destination.description}</p>
                   <div className="flex items-center justify-between mt-3">
                     <span className="text-sm font-medium text-yellow-600">⭐ {destination.rating}</span>
-                    <span className="text-sm font-bold text-green-700">₹{destination.price}</span>
                   </div>
                 </div>
               </div>
