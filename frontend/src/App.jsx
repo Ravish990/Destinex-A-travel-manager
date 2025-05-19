@@ -6,6 +6,7 @@ import './App.css';
 import Home from './components/Home';
 import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 import PlannerPage from './components/PlannerPage';
+import Explore from './pages/Explore';
 // import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 import AuthPage from './pages/AuthPage';
 function App() {
@@ -23,6 +24,7 @@ function App() {
         {/* <Route path='/popular-destinations-india' element={<PopularDestinationsIndia />} /> */}
         {/* Add more routes as needed */}
         <Route path='/login' element={<AuthPage/>} />
+        <Route path='/explore' element={<Explore />} />
       </Routes>
     </Router>
   );
