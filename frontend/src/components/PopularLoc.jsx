@@ -1,37 +1,37 @@
-// src/components/PopularLoc.jsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './PopularLoc.css';
-
-const indianLocations = [
-  { name: 'Goa', tag: 'POPULAR' },
-  { name: 'Kerala', tag: 'IN SEASON' },
-  { name: 'Rishikesh', tag: 'BUDGET' },
-  { name: 'Jaipur', tag: 'POPULAR' },
-  { name: 'Darjeeling', tag: 'HONEYMOON' },
-  { name: 'Udaipur', tag: 'HONEYMOON' },
-  { name: 'Shimla', tag: 'HONEYMOON' },
-  { name: 'Leh-Ladakh', tag: 'TRENDING' },
-  { name: 'Andaman Islands', tag: 'HONEYMOON' },
-  { name: 'Kolkata', tag: 'POPULAR' },
-  { name: 'Delhi', tag: 'POPULAR' },
-  { name: 'Mumbai', tag: 'POPULAR' },
-  { name: 'Bangalore', tag: 'POPULAR' },
-  { name: 'Hyderabad', tag: 'POPULAR' },
-  { name: 'Chennai', tag: 'POPULAR' },
-  { name: 'Pune', tag: 'POPULAR' },
-  { name: 'Ahmedabad', tag: 'POPULAR' },
-  { name: 'Lucknow', tag: 'POPULAR' },
-  { name: 'Varanasi', tag: 'POPULAR' },
-  { name: 'Hampi', tag: 'TRENDING' }
-];
+import { useNavigate } from 'react-router-dom';
 
 function PopularLoc({ onClose }) {
-  const navigate = useNavigate(); // ✅ use it here
+  const [locations, setLocations] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handleLocationClick = (city) => {
-    navigate(`/destination/${city}`);
-    onClose(); // Optional: close popup after navigation
+  useEffect(() => {
+    axios.get('http://localhost:8000/destination/places')
+      .then((res) => {
+        const data = Array.isArray(res.data) ? res.data : res.data.data;
+        if (Array.isArray(data)) {
+          setLocations(data);
+        } else {
+          throw new Error('Invalid response format');
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch locations:', err);
+        setError('Could not load destinations.');
+      });
+  }, []);
+
+  const filteredLocations = locations.filter((loc) =>
+    loc.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleDestinationClick = (destinationId) => {
+    onClose();
+    navigate(`/destinations/${destinationId}/packages`);
   };
 
   return (
@@ -48,20 +48,18 @@ function PopularLoc({ onClose }) {
         type="text" 
         className="location-search" 
         placeholder="Search Indian cities..." 
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
+
+      {error && <p className="error">{error}</p>}
+
       <ul className="location-list">
-        {indianLocations.map((loc, index) => (
-          <li 
-            key={index} 
-            className="location-item" 
-            onClick={() => handleLocationClick(loc.name)} // ✅ Add click handler
-            style={{ cursor: 'pointer' }} // Optional: improve UX
-          >
+        {filteredLocations.map((loc, index) => (
+          <li key={index} className="location-item" onClick={() => handleDestinationClick(loc._id)}>
             <span className="location-name">{loc.name}</span>
             {loc.tag && (
-              <span className={`tag ${loc.tag.toLowerCase().replace(/\s+/g, '-')}`}>
-                {loc.tag}
-              </span>
+              <span className={`tag ${loc.tag.toLowerCase().replace(/\s+/g, '-')}`}>{loc.tag}</span>
             )}
           </li>
         ))}
@@ -69,4 +67,5 @@ function PopularLoc({ onClose }) {
     </div>
   );
 }
+
 export default PopularLoc;
