@@ -36,7 +36,7 @@ function App() {
         <Route path="/packages/:destinationId" element={<Packages />} />
         <Route path="/booking/:packageId" element={<Booking />} />
         <Route path="/payment/:packageId" element={<Payment />} />
-        <Route path="/city/:cityName/destinations" element={<CityDestinations />} />
+        <Route path="/city/:cityId/destinations" element={<CityDestinations />} />
         <Route path="/destinations/:destinationId/packages" element={<Packages />} />
         <Route path="/package/:id" element={<PackageDetail />} />
 
