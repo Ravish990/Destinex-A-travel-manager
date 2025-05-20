@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './components/Home';
-import PopularDestinationsIndia from './components/PopularDestinationsIndia';
+
 import PlannerPage from './components/PlannerPage';
 import Explore from './pages/Explore';
 // import PopularDestinationsIndia from './components/PopularDestinationsIndia';
