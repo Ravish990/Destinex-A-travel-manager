@@ -24,7 +24,6 @@ function Navbar() {
   const emojis = ['😊', '🌟', '🎯', '🎨', '🎭', '🎪', '🎡', '🎢', '🎠', '🎪', '🎨', '🎭', '🎪', '🎡', '🎢', '🎠'];
 
   useEffect(() => {
-    // Set a random emoji when component mounts
     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
     setAvatarEmoji(randomEmoji);
   }, []);
@@ -55,7 +54,6 @@ function Navbar() {
       .catch(() => setCities([]));
   }, []);
 
-  // Fetch destinations for a city when hovered/clicked
   const handleCityHover = (cityId) => {
     setActiveCityId(cityId);
     setLoadingDest(true);

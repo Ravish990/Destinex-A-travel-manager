@@ -16,11 +16,12 @@ import CityDestinations from './pages/CityDestinations';
 import PackageDetail from './pages/PackageDetail';
 import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 
-const AppContent = () => {
+const App = () => {
 
 
   return (
-    <>
+    <AuthProvider>
+      <Router>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/popular-destinations" element={<PopularDestinationsIndia />} />
@@ -35,15 +36,6 @@ const AppContent = () => {
         <Route path="/destinations/:destinationId/packages" element={<Packages />} />
         <Route path="/package/:id" element={<PackageDetail />} />
       </Routes>
-    </>
-  );
-};
-
-function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
       </Router>
     </AuthProvider>
   );
