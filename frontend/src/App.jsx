@@ -15,12 +15,10 @@ import { AuthProvider } from './context/AuthContext';
 import CityDestinations from './pages/CityDestinations';
 import PackageDetail from './pages/PackageDetail';
 
-const AppContent = () => {
-  const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
-
+function App() {
   return (
-    <>
+    <AuthProvider>
+      <Router>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/popular-destinations" element={<PopularDestinationsIndia />} />
@@ -35,15 +33,6 @@ const AppContent = () => {
         <Route path="/destinations/:destinationId/packages" element={<Packages />} />
         <Route path="/package/:id" element={<PackageDetail />} />
       </Routes>
-    </>
-  );
-};
-
-function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
       </Router>
     </AuthProvider>
   );

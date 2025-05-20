@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Create axios instance with base URL
 const instance = axios.create({
   baseURL: 'http://localhost:8000',
   headers: {
@@ -11,10 +10,7 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(
   (config) => {
-    // Get token from localStorage
     const token = localStorage.getItem('token');
-    
-    // If token exists, add it to headers
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
