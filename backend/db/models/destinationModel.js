@@ -33,12 +33,13 @@ const destinationSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  price: {
-    type: Number,
-    required: true,
-  },
   category: {
     type: String,
+    required: true,
+  },
+  city: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'City',
     required: true,
   },
   createdAt: {

@@ -1,36 +1,70 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const FilterSection = () => {
+const categories = ['Luxury', 'Adventure', 'Budget', 'Popular', 'Romantic', 'Modern'];
+const ratings = [5, 4, 3, 2];
+const prices = [1000, 500, 200]; // example thresholds
+
+const FilterSection = ({ setDestinations }) => {
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedRating, setSelectedRating] = useState('');
+
+  const fetchFilteredData = async () => {
+    try {
+      let url = 'http://localhost:8000/destination/places';
+
+      if (selectedCategory && selectedRating) {
+        url = `http://localhost:8000/destination/places/category/${selectedCategory}/rating/${selectedRating}`;
+      } else if (selectedCategory) {
+        url = `http://localhost:8000/destination/places/category/${selectedCategory}`;
+      } else if (selectedRating) {
+        url = `http://localhost:8000/destination/places/rating/${selectedRating}`;
+      }
+
+      const res = await axios.get(url);
+      const data = Array.isArray(res.data) ? res.data : res.data.data;
+      setDestinations(data);
+    } catch (error) {
+      console.error('Error fetching filtered destinations:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFilteredData();
+  }, [selectedCategory, selectedRating]);
+
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md sticky top-4 text-black" >
-      <h2 className="text-lg font-semibold mb-4">Filters</h2>
+    <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md mx-auto md:mx-0">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Filter Destinations</h2>
 
-      <div className="mb-6">
-        <h3 className="font-medium">Price</h3>
-        <div className="space-y-1 mt-2">
-          <label><input type="checkbox" className="mr-2" /> Below ₹ 100k</label><br />
-          <label><input type="checkbox" className="mr-2" /> Below ₹ 150k</label><br />
-          <label><input type="checkbox" className="mr-2" /> Below ₹ 200k</label><br />
-          <label><input type="checkbox" className="mr-2" /> Above ₹ 200k</label>
-        </div>
+      {/* Category Filter */}
+      <div className="mb-5">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="block w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition"
+        >
+          <option value="">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
       </div>
 
-      <div className="mb-6">
-        <h3 className="font-medium">Star Rating</h3>
-        <div className="space-y-1 mt-2">
-          <label><input type="checkbox" className="mr-2" /> 3 Star</label><br />
-          <label><input type="checkbox" className="mr-2" /> 4 Star</label><br />
-          <label><input type="checkbox" className="mr-2" /> 5 Star</label>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="font-medium">Villa Type</h3>
-        <div className="space-y-1 mt-2">
-          <label><input type="checkbox" className="mr-2" /> Water Villa</label><br />
-          <label><input type="checkbox" className="mr-2" /> Beach Bungalow</label><br />
-          <label><input type="checkbox" className="mr-2" /> Pool Villa</label>
-        </div>
+      {/* Rating Filter */}
+      <div className="mb-5">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+        <select
+          value={selectedRating}
+          onChange={(e) => setSelectedRating(e.target.value)}
+          className="block w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition"
+        >
+          <option value="">All Ratings</option>
+          {ratings.map((rate) => (
+            <option key={rate} value={rate}>{rate} stars & up</option>
+          ))}
+        </select>
       </div>
     </div>
   );
