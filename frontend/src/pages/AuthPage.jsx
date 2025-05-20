@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react'; // Import the back symbol from lucide-react
+import { ArrowLeft } from 'lucide-react'; 
 import LoginPage from './Login';
 import Signup from '../components/Signup';
 import './Login.css';
 
 const AuthPage = () => {
   const [isRightPanelActive, setIsRightPanelActive] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleBackButtonClick = () => {
-    navigate('/'); // Navigate to the home page
+    navigate('/'); 
   };
 
   return (
     <div className={`auth-super-container${isRightPanelActive ? ' right-panel-active' : ''}`}>
       {/* Login Form */}
       <div className="form-container sign-in-container">
-        {/* Back Button for Sign In Page */}
         <button 
           className="lucid-back-button" 
-          onClick={handleBackButtonClick} // Navigate to the home page
+          onClick={handleBackButtonClick} 
         >
-          <ArrowLeft size={24} /> {/* Back symbol from lucide-react */}
+          <ArrowLeft size={24} /> 
         </button>
         <LoginPage setIsActive={() => setIsRightPanelActive(true)} showForgotPassword={true} />
       </div>
