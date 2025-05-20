@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from './Button';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './Navbar.css';
+import { useAuth } from '../context/AuthContext';
+import axios from '../utils/axios';
 
 function Navbar() {
   const [click, setClick] = useState(false);
@@ -13,8 +14,20 @@ function Navbar() {
   const [destinations, setDestinations] = useState([]);
   const [activeCityId, setActiveCityId] = useState(null);
   const [loadingDest, setLoadingDest] = useState(false);
+  const [avatarEmoji, setAvatarEmoji] = useState('😊');
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const timeoutRef = useRef(null);
+  const profileTimeoutRef = useRef(null);
   const navigate = useNavigate();
+  const { isAuthenticated, logout, user } = useAuth();
+
+  const emojis = ['😊', '🌟', '🎯', '🎨', '🎭', '🎪', '🎡', '🎢', '🎠', '🎪', '🎨', '🎭', '🎪', '🎡', '🎢', '🎠'];
+
+  useEffect(() => {
+    // Set a random emoji when component mounts
+    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+    setAvatarEmoji(randomEmoji);
+  }, []);
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -22,13 +35,22 @@ function Navbar() {
   const showButton = () => setButton(window.innerWidth > 960);
 
   const toggleDropdown = () => {
-    setDropdownClicked((prev) => !prev);
-    setShowDropdown((prev) => !prev);
+    setDropdownClicked(prev => !prev);
+    setShowDropdown(prev => !prev);
+  };
+
+  const toggleProfileDropdown = () => {
+    setShowProfileDropdown(prev => !prev);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   // Fetch all cities for Explore dropdown
   useEffect(() => {
-    axios.get('http://localhost:8000/cities')
+    axios.get('/cities')
       .then(res => setCities(res.data.data || []))
       .catch(() => setCities([]));
   }, []);
@@ -37,7 +59,7 @@ function Navbar() {
   const handleCityHover = (cityId) => {
     setActiveCityId(cityId);
     setLoadingDest(true);
-    axios.get(`http://localhost:8000/cities/${cityId}/destinations`)
+    axios.get(`/cities/${cityId}/destinations`)
       .then(res => {
         setDestinations(res.data.data || []);
         setLoadingDest(false);
@@ -72,9 +94,7 @@ function Navbar() {
           <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
         </div>
         <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-          <li className='nav-item'><Link to='/' className='nav-links' onClick={closeMobileMenu}>Home</Link></li>
-          <li className='nav-item'><Link to='/services' className='nav-links' onClick={closeMobileMenu}>Services</Link></li>
-          <li className='nav-item'><Link to='/products' className='nav-links' onClick={closeMobileMenu}>Products</Link></li>
+          
           <li
             className="nav-item relative"
             onMouseEnter={() => {
@@ -134,9 +154,39 @@ function Navbar() {
               </div>
             )}
           </li>
-          <li><Link to='/login' className='nav-links-mobile' onClick={closeMobileMenu}>Login</Link></li>
         </ul>
-        {button && <Button buttonStyle='btn--outline'>Login</Button>}
+        <div className="navbar-right">
+          {isAuthenticated ? (
+            <div
+              className="profile-avatar"
+              onClick={toggleProfileDropdown}
+              onMouseEnter={() => {
+                if (profileTimeoutRef.current) clearTimeout(profileTimeoutRef.current);
+                setShowProfileDropdown(true);
+              }}
+              onMouseLeave={() => {
+                profileTimeoutRef.current = setTimeout(() => setShowProfileDropdown(false), 150);
+              }}
+            >
+              <div className="avatar-circle">
+                {avatarEmoji}
+              </div>
+              {showProfileDropdown && (
+                <div className="profile-dropdown">
+                  <div className="profile-menu">
+                    <button onClick={handleLogout} className="profile-menu-item text-red-500">
+                      <i className="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            button && (
+              <Link to="/login"><Button buttonStyle='btn--outline'>Login</Button></Link>
+            )
+          )}
+        </div>
       </div>
     </nav>
   );
