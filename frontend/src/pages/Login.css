@@ -1025,3 +1025,21 @@ p {
     padding: 0.7rem;
   }
 } 
+
+/* Back Button Styling */
+.lucid-back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+
+.lucid-back-button:hover {
+  transform: scale(1.1); /* Slight zoom effect on hover */
+}

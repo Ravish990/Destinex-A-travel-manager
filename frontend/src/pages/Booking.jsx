@@ -4,17 +4,26 @@ import axios from '../utils/axios';
 
 const Booking = () => {
   const { packageId } = useParams();
-  const [pkg, setPkg] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', date: '' });
-  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
+  const userId = localStorage.getItem('userId'); 
+  const [pkg, setPkg] = useState(null);
+  const [form, setForm] = useState({
+    numberOfPeople: 1,
+    date: ''
+  });
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Fetch package details
   useEffect(() => {
     axios.get(`/package/${packageId}`)
       .then(res => {
-        setPkg(res.data);
+        const packageData = res.data.data || res.data; // adjust depending on backend structure
+        setPkg(packageData);
+        setTotalPrice(packageData.price); // initial price
         setLoading(false);
       })
       .catch(() => {
@@ -23,55 +32,101 @@ const Booking = () => {
       });
   }, [packageId]);
 
+  // Update total price when number of people changes
+  useEffect(() => {
+    if (pkg) {
+      setTotalPrice(pkg.price * form.numberOfPeople);
+    }
+  }, [form.numberOfPeople, pkg]);
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm(prev => ({
+      ...prev,
+      [name]: name === 'numberOfPeople' ? parseInt(value) : value
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
+
+    if (!userId) {
+      setError('You must be logged in to book.');
+      setSubmitting(false);
+      return;
+    }
+
     try {
-      await axios.post('/booking', {
-        packageId,
-        ...form
+      await axios.post('/bookings', {
+        userId,
+        destinationId: pkg.destination,
+        bookingDate: form.date,
+        numberOfPeople: form.numberOfPeople,
+        totalPrice,
+        packageId
       });
+
       navigate(`/payment/${packageId}`);
     } catch (err) {
+      console.error(err);
       setError('Booking failed. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (loading) return <div className="text-center py-10">Loading booking details...</div>;
+  if (!userId) {
+    return <div className="text-center py-10 text-red-600">Please log in to proceed with booking.</div>;
+  }
+
+  if (loading) return <div className="text-center py-10">Loading package details...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gradient-to-r from-yellow-100 to-pink-100 p-8">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Book Package: {pkg?.name}</h1>
-      <form className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md" onSubmit={handleSubmit}>
+    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Book Package: {pkg.name}</h1>
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 w-full max-w-lg">
         <div className="mb-4">
-          <label className="block mb-1 font-semibold">Name</label>
-          <input type="text" name="name" value={form.name} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
+          <label className="block mb-1 font-semibold text-gray-700">Travel Date</label>
+          <input
+            type="date"
+            name="date"
+            value={form.date}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded"
+            required
+          />
         </div>
+
         <div className="mb-4">
-          <label className="block mb-1 font-semibold">Email</label>
-          <input type="email" name="email" value={form.email} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
+          <label className="block mb-1 font-semibold text-gray-700">Number of People</label>
+          <input
+            type="number"
+            name="numberOfPeople"
+            value={form.numberOfPeople}
+            min="1"
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded"
+            required
+          />
         </div>
+
         <div className="mb-4">
-          <label className="block mb-1 font-semibold">Phone</label>
-          <input type="tel" name="phone" value={form.phone} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
+          <p className="text-lg text-gray-800"><strong>Total Price:</strong> ₹{totalPrice}</p>
         </div>
-        <div className="mb-4">
-          <label className="block mb-1 font-semibold">Date</label>
-          <input type="date" name="date" value={form.date} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
-        </div>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition" disabled={submitting}>
-          {submitting ? 'Booking...' : 'Proceed to Payment'}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition"
+        >
+          {submitting ? 'Booking...' : 'Confirm Booking'}
         </button>
       </form>
     </div>
   );
 };
 
-export default Booking; 
+export default Booking;

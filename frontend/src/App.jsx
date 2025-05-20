@@ -13,12 +13,15 @@ import Booking from './pages/Booking';
 import Payment from './pages/Payment';
 import { AuthProvider } from './context/AuthContext';
 import CityDestinations from './pages/CityDestinations';
+import PackageDetail from './pages/PackageDetail';
+
 const AppContent = () => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
 
   return (
     <>
+      {!isLoginPage && <Navbar />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/popular-destinations" element={<PopularDestinationsIndia />} />
@@ -29,8 +32,9 @@ const AppContent = () => {
         <Route path="/packages/:destinationId" element={<Packages />} />
         <Route path="/booking/:packageId" element={<Booking />} />
         <Route path="/payment/:packageId" element={<Payment />} />
-        <Route path="/city/:cityName/destinations" element={<CityDestinations />} />
+        <Route path="/city/:cityId/destinations" element={<CityDestinations />} />
         <Route path="/destinations/:destinationId/packages" element={<Packages />} />
+        <Route path="/package/:id" element={<PackageDetail />} />
       </Routes>
     </>
   );

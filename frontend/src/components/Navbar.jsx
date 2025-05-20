@@ -110,45 +110,47 @@ function Navbar() {
             }}
           >
             <button
-              className="nav-links bg-gradient-to-r from-pink-200 via-pink-100 to-green-200 text-green-700 font-small px-3 py-1 rounded-full transition-all text-sm"
+              className="nav-links explore-btn"
               onClick={toggleDropdown}
             >
-              Explore Destinations <i className="fas fa-chevron-down ml-1 text-xs"></i>
+              Explore Destinations <i className="fas fa-chevron-down"></i>
             </button>
             {showDropdown && cities.length > 0 && (
-              <div className="absolute left-1/2 -translate-x-1/2 top-12 bg-white rounded-lg shadow-lg w-[700px] max-h-[600px] overflow-y-auto z-50 p-4 grid grid-cols-3 gap-4">
-                {cities.map((city) => (
-                  <div
-                    key={city._id}
-                    className="flex flex-col items-start group"
-                    onMouseEnter={() => handleCityHover(city._id)}
-                  >
-                    <span className='destination-list-dropdown font-semibold text-blue-700 cursor-pointer hover:underline'>{city.name}</span>
-                    {/* Show destinations for this city if active */}
-                    {activeCityId === city._id && (
-                      <div className="mt-2 ml-2 bg-gray-50 rounded shadow-lg p-2 w-56 max-h-60 overflow-y-auto border border-gray-200">
-                        {loadingDest ? (
-                          <div className="text-xs text-gray-400">Loading...</div>
-                        ) : destinations.length > 0 ? (
-                          destinations.map(dest => (
-                            <div
-                              key={dest._id}
-                              className="flex items-center justify-between px-2 py-1 hover:bg-blue-100 rounded cursor-pointer"
-                              onClick={() => handleDestinationClick(dest._id)}
-                            >
-                              <span className='text-gray-800'>{dest.name}</span>
-                              <span className={`text-xs font-medium px-2 py-1 rounded bg-gray-200 text-gray-700`}>
-                                {dest.category}
-                              </span>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="text-xs text-gray-400">No destinations</div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <div className="destinations-dropdown absolute left-1/2 -translate-x-1/2 top-12 w-[700px] max-h-[600px] overflow-y-auto z-50">
+                <div className="destinations-grid">
+                  {cities.map((city) => (
+                    <div
+                      key={city._id}
+                      className="destination-item"
+                      onMouseEnter={() => handleCityHover(city._id)}
+                    >
+                      <span className='destination-list-dropdown'>{city.name}</span>
+                      {/* Show destinations for this city if active */}
+                      {activeCityId === city._id && (
+                        <div className="mt-2 ml-2 bg-white rounded-lg shadow-md p-2 w-56 max-h-60 overflow-y-auto border border-gray-100">
+                          {loadingDest ? (
+                            <div className="text-xs text-gray-400">Loading...</div>
+                          ) : destinations.length > 0 ? (
+                            destinations.map(dest => (
+                              <div
+                                key={dest._id}
+                                className="flex items-center justify-between px-2 py-1 hover:bg-blue-50 rounded cursor-pointer"
+                                onClick={() => handleDestinationClick(dest._id)}
+                              >
+                                <span className='text-gray-800'>{dest.name}</span>
+                                <span className="destination-category">
+                                  {dest.category}
+                                </span>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="text-xs text-gray-400">No destinations</div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </li>
