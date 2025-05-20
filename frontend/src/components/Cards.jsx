@@ -1,13 +1,12 @@
 import React from 'react';
 import './Cards.css';
-import PopularDestinationsIndia from "./PopularDestinationsIndia";
 import CardItem from './CardItem';
 
 function Cards() {
   return (
     <div className='cards'>
       
-      <PopularDestinationsIndia />
+     
       <h1 className='cards__title'>Check out these EPIC Destinations!</h1>
       <div className='cards__container'>
         <div className='cards__wrapper'>
