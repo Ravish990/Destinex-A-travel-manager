@@ -10,9 +10,9 @@ const Packages = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/package/destination/${destinationId}`)
+    axios.get(`http://localhost:8000/destination/destinations/${destinationId}/packages`)
       .then(res => {
-        setPackages(res.data || []);
+        setPackages(res.data.data || []);
         setLoading(false);
       })
       .catch(err => {

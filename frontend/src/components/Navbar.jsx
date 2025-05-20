@@ -10,9 +10,12 @@ function Navbar() {
   const [button, setButton] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownClicked, setDropdownClicked] = useState(false);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [cities, setCities] = useState([]);
   const [destinations, setDestinations] = useState([]);
-  const [avatarEmoji, setAvatarEmoji] = useState('👤');
+  const [activeCityId, setActiveCityId] = useState(null);
+  const [loadingDest, setLoadingDest] = useState(false);
+  const [avatarEmoji, setAvatarEmoji] = useState('😊');
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const timeoutRef = useRef(null);
   const profileTimeoutRef = useRef(null);
   const navigate = useNavigate();
@@ -40,41 +43,44 @@ function Navbar() {
     setShowProfileDropdown(prev => !prev);
   };
 
-  const handleDestinationClick = (destName) => {
-    navigate("/explore", { state: { destination: destName } });
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  // Fetch all cities for Explore dropdown
+  useEffect(() => {
+    axios.get('/cities')
+      .then(res => setCities(res.data.data || []))
+      .catch(() => setCities([]));
+  }, []);
+
+  // Fetch destinations for a city when hovered/clicked
+  const handleCityHover = (cityId) => {
+    setActiveCityId(cityId);
+    setLoadingDest(true);
+    axios.get(`/cities/${cityId}/destinations`)
+      .then(res => {
+        setDestinations(res.data.data || []);
+        setLoadingDest(false);
+      })
+      .catch(() => {
+        setDestinations([]);
+        setLoadingDest(false);
+      });
+  };
+
+  const handleDestinationClick = (destinationId) => {
     setShowDropdown(false);
     setDropdownClicked(false);
     closeMobileMenu();
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-    setShowProfileDropdown(false);
+    navigate(`/destinations/${destinationId}/packages`);
   };
 
   useEffect(() => {
     showButton();
     window.addEventListener("resize", showButton);
     return () => window.removeEventListener("resize", showButton);
-  }, []);
-
-  useEffect(() => {
-    axios.get('/destination/places')
-      .then(res => {
-        if (Array.isArray(res.data)) {
-          setDestinations(res.data);
-        } else if (Array.isArray(res.data.data)) {
-          setDestinations(res.data.data);
-        } else {
-          console.error("Unexpected response format:", res.data);
-          setDestinations([]);
-        }
-      })
-      .catch(err => {
-        console.error("Failed to fetch destinations:", err);
-        setDestinations([]);
-      });
   }, []);
 
   return (
@@ -99,6 +105,8 @@ function Navbar() {
               if (!dropdownClicked) {
                 timeoutRef.current = setTimeout(() => setShowDropdown(false), 150);
               }
+              setActiveCityId(null);
+              setDestinations([]);
             }}
           >
             <button
@@ -107,18 +115,38 @@ function Navbar() {
             >
               Explore Destinations <i className="fas fa-chevron-down ml-1 text-xs"></i>
             </button>
-            {showDropdown && destinations.length > 0 && (
-              <div className="absolute left-1/2 -translate-x-1/2 top-12 bg-white rounded-lg shadow-lg w-[600px] max-h-[600px] overflow-y-auto z-50 p-4 grid grid-cols-3 gap-4">
-                {destinations.map((dest) => (
+            {showDropdown && cities.length > 0 && (
+              <div className="absolute left-1/2 -translate-x-1/2 top-12 bg-white rounded-lg shadow-lg w-[700px] max-h-[600px] overflow-y-auto z-50 p-4 grid grid-cols-3 gap-4">
+                {cities.map((city) => (
                   <div
-                    key={dest._id}
-                    className="flex items-center justify-between px-2 py-1 hover:bg-gray-100 rounded cursor-pointer"
-                    onClick={() => handleDestinationClick(dest.name)}
+                    key={city._id}
+                    className="flex flex-col items-start group"
+                    onMouseEnter={() => handleCityHover(city._id)}
                   >
-                    <span className='destination-list-dropdown'>{dest.name}</span>
-                    <span className="text-xs font-medium px-2 py-1 rounded bg-gray-200 text-gray-700">
-                      {dest.category}
-                    </span>
+                    <span className='destination-list-dropdown font-semibold text-blue-700 cursor-pointer hover:underline'>{city.name}</span>
+                    {/* Show destinations for this city if active */}
+                    {activeCityId === city._id && (
+                      <div className="mt-2 ml-2 bg-gray-50 rounded shadow-lg p-2 w-56 max-h-60 overflow-y-auto border border-gray-200">
+                        {loadingDest ? (
+                          <div className="text-xs text-gray-400">Loading...</div>
+                        ) : destinations.length > 0 ? (
+                          destinations.map(dest => (
+                            <div
+                              key={dest._id}
+                              className="flex items-center justify-between px-2 py-1 hover:bg-blue-100 rounded cursor-pointer"
+                              onClick={() => handleDestinationClick(dest._id)}
+                            >
+                              <span className='text-gray-800'>{dest.name}</span>
+                              <span className={`text-xs font-medium px-2 py-1 rounded bg-gray-200 text-gray-700`}>
+                                {dest.category}
+                              </span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-xs text-gray-400">No destinations</div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

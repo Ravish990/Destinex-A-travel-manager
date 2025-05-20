@@ -12,7 +12,7 @@ import Packages from './pages/Packages';
 import Booking from './pages/Booking';
 import Payment from './pages/Payment';
 import { AuthProvider } from './context/AuthContext';
-
+import CityDestinations from './pages/CityDestinations';
 const AppContent = () => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
@@ -29,6 +29,8 @@ const AppContent = () => {
         <Route path="/packages/:destinationId" element={<Packages />} />
         <Route path="/booking/:packageId" element={<Booking />} />
         <Route path="/payment/:packageId" element={<Payment />} />
+        <Route path="/city/:cityName/destinations" element={<CityDestinations />} />
+        <Route path="/destinations/:destinationId/packages" element={<Packages />} />
       </Routes>
     </>
   );

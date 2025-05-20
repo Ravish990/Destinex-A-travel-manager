@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     phoneNumber:{
         type: String,
-        required: true,
+        required: false,
         unique: true,
         trim:true
     },

@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './PopularLoc.css';
+import { useNavigate } from 'react-router-dom';
 
 function PopularLoc({ onClose }) {
   const [locations, setLocations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('http://localhost:8000/destination/places')
@@ -27,6 +29,11 @@ function PopularLoc({ onClose }) {
   const filteredLocations = locations.filter((loc) =>
     loc.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleDestinationClick = (destinationId) => {
+    onClose();
+    navigate(`/destinations/${destinationId}/packages`);
+  };
 
   return (
     <div className="location-popup">
@@ -50,12 +57,10 @@ function PopularLoc({ onClose }) {
 
       <ul className="location-list">
         {filteredLocations.map((loc, index) => (
-          <li key={index} className="location-item">
+          <li key={index} className="location-item" onClick={() => handleDestinationClick(loc._id)}>
             <span className="location-name">{loc.name}</span>
             {loc.tag && (
-              <span className={`tag ${loc.tag.toLowerCase().replace(/\s+/g, '-')}`}>
-                {loc.tag}
-              </span>
+              <span className={`tag ${loc.tag.toLowerCase().replace(/\s+/g, '-')}`}>{loc.tag}</span>
             )}
           </li>
         ))}
