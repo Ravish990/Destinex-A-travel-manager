@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './components/Home';
-import PopularDestinationsIndia from './components/PopularDestinationsIndia';
+
 import PlannerPage from './components/PlannerPage';
 import Explore from './pages/Explore';
 import AuthPage from './pages/AuthPage';
