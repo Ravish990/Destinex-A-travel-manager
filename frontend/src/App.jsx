@@ -17,8 +17,7 @@ import PackageDetail from './pages/PackageDetail';
 import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 
 const AppContent = () => {
-  const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
+
 
   return (
     <>
