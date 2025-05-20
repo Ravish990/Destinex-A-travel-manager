@@ -14,6 +14,7 @@ import Payment from './pages/Payment';
 import { AuthProvider } from './context/AuthContext';
 import CityDestinations from './pages/CityDestinations';
 import PackageDetail from './pages/PackageDetail';
+import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 
 function App() {
   return (
