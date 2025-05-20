@@ -15,6 +15,7 @@ import Booking from './pages/Booking';
 import Payment from './pages/Payment';
 import CityDestinations from './pages/CityDestinations';
 import  PackageDetail from './pages/PackageDetail';
+import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 
 function App() {
 
