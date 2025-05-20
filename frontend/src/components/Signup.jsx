@@ -12,6 +12,7 @@ const Signup = ({ setIsActive, onSignupSuccess }) => {
         email: '',
         password: '',
         dob: '',
+        phoneNumber: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -22,6 +23,10 @@ const Signup = ({ setIsActive, onSignupSuccess }) => {
 
     const validateEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    const validatePhoneNumber = (phone) => {
+        return /^\+?[\d\s-]{10,}$/.test(phone);
     };
 
     const calculatePasswordStrength = (password) => {
@@ -57,6 +62,11 @@ const Signup = ({ setIsActive, onSignupSuccess }) => {
 
         if (!validateEmail(formData.email)) {
             setError('Please enter a valid email address');
+            return false;
+        }
+
+        if (!validatePhoneNumber(formData.phoneNumber)) {
+            setError('Please enter a valid phone number');
             return false;
         }
 
@@ -190,6 +200,19 @@ const Signup = ({ setIsActive, onSignupSuccess }) => {
                         onChange={handleChange}
                         className="input"
                         placeholder="Enter your email"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Phone Number</label>
+                    <input
+                        type="tel"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
+                        className="input"
+                        placeholder="Enter your phone number"
                         required
                     />
                 </div>

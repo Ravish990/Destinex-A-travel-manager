@@ -21,7 +21,6 @@ const AppContent = () => {
 
   return (
     <>
-      {!isLoginPage && <Navbar />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/popular-destinations" element={<PopularDestinationsIndia />} />
