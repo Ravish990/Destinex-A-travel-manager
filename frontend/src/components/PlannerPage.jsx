@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+
 import './PlannerPage.css';
 
 const PlannerPage = () => {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type') || 'destination';
   const { locationId } = useParams();
   const formattedLocation = locationId.replace(/-/g, ' ');
 
@@ -110,42 +114,59 @@ const PlannerPage = () => {
         </>
       )}
 
-      {step === 3 && (
-        <div className="results-wrapper">
-          <div className="results-heading">
-            <h2>Holiday Plan Summary</h2>
-            <p>
-              Destination: <strong>{latestTrip.destination}</strong> <br />
-              Duration: <strong>{latestTrip.duration}</strong> <br />
-              Group: <strong>{latestTrip.groupType}</strong>
-            </p>
-          </div>
+   {step === 3 && (
+  <div className="results-wrapper">
+    <div className="results-heading">
+      <h2>Holiday Plan Summary</h2>
+      <p>
+        Destination: <strong>{latestTrip.destination}</strong> <br />
+        Duration: <strong>{latestTrip.duration}</strong> <br />
+        Group: <strong>{latestTrip.groupType}</strong>
+      </p>
+    </div>
 
-          <div className="results-section">
-            <h3>Top Tourist Places in {formattedLocation}</h3>
-            <div className="card-list">
-              {data.places.map((place, idx) => (
-                <div className="info-card" key={idx}>
-                  <div className="card-icon">📍</div>
-                  <div className="card-content">{place}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="results-section">
-            <h3>Recommended Hotels</h3>
-            <div className="card-list">
-              {data.hotels.map((hotel, idx) => (
-                <div className="info-card" key={idx}>
-                  <div className="card-icon">🏨</div>
-                  <div className="card-content">{hotel}</div>
-                </div>
-              ))}
-            </div>
+    {type === 'destination' ? (
+      <>
+        <div className="results-section">
+          <h3>Top Tourist Places in {formattedLocation}</h3>
+          <div className="card-list">
+            {data.places.map((place, idx) => (
+              <div className="info-card" key={idx}>
+                <div className="card-icon">📍</div>
+                <div className="card-content">{place}</div>
+              </div>
+            ))}
           </div>
         </div>
-      )}
+
+        <div className="results-section">
+          <h3>Recommended Hotels</h3>
+          <div className="card-list">
+            {data.hotels.map((hotel, idx) => (
+              <div className="info-card" key={idx}>
+                <div className="card-icon">🏨</div>
+                <div className="card-content">{hotel}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </>
+    ) : (
+      <div className="results-section">
+        <h3>Unique Experiences in {formattedLocation}</h3>
+        <ul>
+          <li>🌿 Adventure with locals</li>
+          <li>🌸 Nature walks around {formattedLocation}</li>
+          <li>🧘‍♂️ Spiritual retreat or cultural immersion</li>
+        </ul>
+        <p>
+          (Customize this section with real experience data later.)
+        </p>
+      </div>
+    )}
+  </div>
+)}
+
     </div>
   );
 };
