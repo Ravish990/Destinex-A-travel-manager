@@ -17,7 +17,9 @@ import PackageDetail from './pages/PackageDetail';
 import PopularDestinationsIndia from './components/PopularDestinationsIndia';
 import Bookings from './pages/Bookings';
 
-function App() {
+const App = () => {
+
+
   return (
     <AuthProvider>
       <Router>

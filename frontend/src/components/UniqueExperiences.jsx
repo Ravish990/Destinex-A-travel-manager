@@ -1,5 +1,6 @@
 import React from 'react';
 import './UniqueExperiences.css';
+import { useNavigate } from 'react-router-dom';
 
 const destinations = [
   {
@@ -18,24 +19,31 @@ const destinations = [
     image: '/images/Assam.jpeg',
   },
   {
-    title: ' Manipur',
+    title: 'Manipur',
     subtitle: 'Loktak Lake',
     image: '/images/Loktak-Lake-Manipur.webp',
   },
   {
-    title: ' Tamil Nadu',
-    subtitle: ' Auroville',
+    title: 'Tamil Nadu',
+    subtitle: 'Auroville',
     image: '/images/Tamil Nadu.webp',
   },
 ];
 
 const UniqueExperiences = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (place) => {
+    const path = `/planner/${place.toLowerCase().replace(/\s+/g, '-')}`;
+    navigate(`${path}?type=experience`);
+  };
+
   return (
     <div className="unique-experiences">
       <h2>FOR UNIQUE EXPERIENCES</h2>
       <div className="experience-slider">
         {destinations.map((dest, index) => (
-          <div className="card" key={index}>
+          <div className="card" key={index} onClick={() => handleClick(dest.title)}>
             <img src={dest.image} alt={dest.title} />
             <div className="overlay">
               <p>{dest.subtitle}</p>
