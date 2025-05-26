@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react'; 
 import LoginPage from './Login';
 import Signup from '../components/Signup';
@@ -8,6 +8,12 @@ import './Login.css';
 const AuthPage = () => {
   const [isRightPanelActive, setIsRightPanelActive] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Set the panel active state based on the current route
+    setIsRightPanelActive(location.pathname === '/signup');
+  }, [location.pathname]);
 
   const handleBackButtonClick = () => {
     navigate('/'); 
@@ -37,14 +43,20 @@ const AuthPage = () => {
           <div className="overlay-panel overlay-left">
             <h1 className="overlay-title">Welcome Back!</h1>
             <p style={{ color: 'white' }}>Ready for your next adventure? Sign in now.</p>
-            <button className="ghost-login" onClick={() => setIsRightPanelActive(false)}>
+            <button className="ghost-login" onClick={() => {
+              setIsRightPanelActive(false);
+              navigate('/login');
+            }}>
               Sign In
             </button>
           </div>
           <div className="overlay-panel overlay-right">
             <h1 className="overlay-title">Hello, Friend!</h1>
             <p style={{ color: 'white' }}>Your journey begins here. Register now!</p>
-            <button className="ghost-login" onClick={() => setIsRightPanelActive(true)}>
+            <button className="ghost-login" onClick={() => {
+              setIsRightPanelActive(true);
+              navigate('/signup');
+            }}>
               Sign Up
             </button>
           </div>

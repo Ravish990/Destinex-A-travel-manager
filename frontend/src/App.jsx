@@ -15,6 +15,7 @@ import { AuthProvider } from './context/AuthContext';
 import CityDestinations from './pages/CityDestinations';
 import PackageDetail from './pages/PackageDetail';
 import PopularDestinationsIndia from './components/PopularDestinationsIndia';
+import Bookings from './pages/Bookings';
 
 const App = () => {
 
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/cities" element={<CityList />} />
         <Route path="/planner/:locationId" element={<PlannerPage />} />
         <Route path="/login" element={<AuthPage />} />
+        <Route path="/signup" element={<AuthPage />} />
         <Route path='/explore' element={<Explore />} />
         <Route path="/packages/:destinationId" element={<Packages />} />
         <Route path="/booking/:packageId" element={<Booking />} />
@@ -35,6 +37,7 @@ const App = () => {
         <Route path="/city/:cityId/destinations" element={<CityDestinations />} />
         <Route path="/destinations/:destinationId/packages" element={<Packages />} />
         <Route path="/package/:id" element={<PackageDetail />} />
+        <Route path="/bookings" element={<Bookings />} />
       </Routes>
       </Router>
     </AuthProvider>

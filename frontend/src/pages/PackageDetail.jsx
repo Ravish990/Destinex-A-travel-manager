@@ -11,7 +11,14 @@ const PackageDetail = () => {
 
   const handleBooking = () => {
     if (pkg && pkg._id) {
-      navigate(`/booking/${pkg._id}`);
+      navigate(`/payment/${pkg._id}`, {
+        state: {
+          bookingDetails: {
+            packageDetails: pkg,
+            totalCost: pkg.price
+          }
+        }
+      });
     } else {
       console.error('Package ID is undefined');
     }
