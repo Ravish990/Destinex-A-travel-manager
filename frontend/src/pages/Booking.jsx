@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from '../utils/axios';
 
 const Booking = () => {
   const { packageId } = useParams();
@@ -19,7 +19,7 @@ const Booking = () => {
 
   // Fetch package details
   useEffect(() => {
-    axios.get(`http://localhost:8000/packages/${packageId}`)
+    axios.get(`/package/${packageId}`)
       .then(res => {
         const packageData = res.data.data || res.data; // adjust depending on backend structure
         setPkg(packageData);
@@ -59,12 +59,13 @@ const Booking = () => {
     }
 
     try {
-      await axios.post('http://localhost:8000/bookings', {
+      await axios.post('/bookings', {
         userId,
-        destinationId: pkg.destination, // Adjust if your package model has destinationId
+        destinationId: pkg.destination,
         bookingDate: form.date,
         numberOfPeople: form.numberOfPeople,
         totalPrice,
+        packageId
       });
 
       navigate(`/payment/${packageId}`);
