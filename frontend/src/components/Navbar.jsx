@@ -172,6 +172,9 @@ function Navbar() {
               {showProfileDropdown && (
                 <div className="profile-dropdown">
                   <div className="profile-menu">
+                    <Link to="/bookings" className="profile-menu-item" onClick={() => setShowProfileDropdown(false)}>
+                      <i className="fas fa-calendar-alt"></i> My Bookings
+                    </Link>
                     <button onClick={handleLogout} className="profile-menu-item text-red-500">
                       <i className="fas fa-sign-out-alt"></i> Logout
                     </button>

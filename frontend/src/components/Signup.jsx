@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Eye, EyeOff, AlertCircle } from 'lucide-react'
 import axios from '../utils/axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const Signup = ({ setIsActive, onSignupSuccess }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { login } = useAuth();
     const [formData, setFormData ] = useState({
         userName: '',
@@ -14,6 +15,15 @@ const Signup = ({ setIsActive, onSignupSuccess }) => {
         dob: '',
         phoneNumber: ''
     });
+
+    useEffect(() => {
+        if (location.state?.phoneNumber) {
+            setFormData(prev => ({
+                ...prev,
+                phoneNumber: location.state.phoneNumber
+            }));
+        }
+    }, [location.state]);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');

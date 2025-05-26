@@ -15,6 +15,11 @@ const bookingSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    packageId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Package',
+        required: true
+    },
     numberOfPeople: {
         type: Number,
         required: true

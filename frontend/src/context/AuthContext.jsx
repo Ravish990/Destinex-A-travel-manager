@@ -1,21 +1,29 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
+    // Check for stored user data and token
     const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
-    
-    if (storedUser && storedToken) {
+    const token = localStorage.getItem('token');
+
+    if (storedUser && token) {
       try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
         setIsAuthenticated(true);
       } catch (error) {
         console.error('Error parsing stored user data:', error);
@@ -27,34 +35,42 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData, token) => {
-    setIsAuthenticated(true);
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    // Ensure userData has all required fields
+    const normalizedUserData = {
+      _id: userData._id,
+      name: userData.name || 'User',
+      email: userData.email,
+      phone: userData.phone || '',
+      role: userData.role || 'user'
+    };
+
+    // Store in localStorage
+    localStorage.setItem('user', JSON.stringify(normalizedUserData));
     localStorage.setItem('token', token);
+
+    // Update state
+    setUser(normalizedUserData);
+    setIsAuthenticated(true);
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    setUser(null);
+    setIsAuthenticated(false);
   };
 
-  if (loading) {
-    return <div>Loading...</div>; 
-  }
+  const value = {
+    isAuthenticated,
+    user,
+    loading,
+    login,
+    logout
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
-      {children}
+    <AuthContext.Provider value={value}>
+      {!loading && children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }; 
