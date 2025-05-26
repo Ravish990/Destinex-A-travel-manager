@@ -22,7 +22,7 @@ const Packages = () => {
   }, [destinationId]);
 
   const handleBookNow = (pkg) => {
-    navigate(`/booking/${pkg._id}`);
+    navigate(`/package/${pkg._id}`);
   };
 
   if (loading) return <div className="text-center py-10">Loading packages...</div>;

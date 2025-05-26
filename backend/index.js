@@ -5,6 +5,7 @@ const cors = require("cors")
 const dotenv = require('dotenv');
 const bookingRouter = require('./routes/bookingRoutes')
 const hotelRouter = require('./routes/hotelRoutes')
+const paymentRouter = require('./routes/paymentRoutes')
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -23,6 +24,10 @@ app.use('/booking', bookingRouter);
 app.use('/hotel', hotelRouter);
 
 app.use('/cities', require('./routes/cityRoutes'));
+
+app.use('/packages', require('./routes/packageRoutes'));
+
+app.use('/payment', paymentRouter);
 
 app.listen(process.env.PORT, () => {
    console.log(`Server is Running on http://localhost:${process.env.PORT}`);

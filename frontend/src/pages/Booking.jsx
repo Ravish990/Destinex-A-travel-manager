@@ -1,78 +1,191 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from '../utils/axios';
+import { useAuth } from '../context/AuthContext';
 
 const Booking = () => {
   const { packageId } = useParams();
-  const [pkg, setPkg] = useState(null);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [packageDetails, setPackageDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', date: '' });
   const [submitting, setSubmitting] = useState(false);
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    adults: 1,
+    children: 0,
+    travelDate: '',
+    specialRequirements: ''
+  });
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/package/${packageId}`)
+    // Fetch package details
+    axios.get(`/destination/destinations/${packageId}/packages`)
       .then(res => {
-        setPkg(res.data);
+        setPackageDetails(res.data.data);
         setLoading(false);
       })
-      .catch(() => {
-        setError('Failed to fetch package details');
+      .catch(err => {
+        console.error('Error fetching package:', err);
+        setError('Failed to load package details');
         setLoading(false);
       });
   }, [packageId]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const calculateTotalCost = () => {
+    if (!packageDetails) return 0;
+    const adultCost = packageDetails.price * formData.adults;
+    const childCost = (packageDetails.price * 0.5) * formData.children; // 50% discount for children
+    return adultCost + childCost;
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
+
     try {
-      // Replace with your booking API endpoint and payload
-      await axios.post('http://localhost:8000/booking', {
-        packageId,
-        ...form
-      });
-      navigate(`/payment/${packageId}`);
+      // Create booking first
+      const bookingData = {
+        userId: user._id,
+        packageId: packageId,
+        adults: formData.adults,
+        children: formData.children,
+        travelDate: formData.travelDate,
+        specialRequirements: formData.specialRequirements,
+        totalAmount: calculateTotalCost(),
+        status: 'pending'
+      };
+
+      const response = await axios.post('/booking/bookings', bookingData);
+      
+      if (response.data) {
+        // Navigate to payment with booking details
+        navigate(`/payment/${packageId}`, {
+          state: {
+            bookingDetails: {
+              ...formData,
+              totalCost: calculateTotalCost(),
+              packageDetails,
+              bookingId: response.data._id
+            }
+          }
+        });
+      }
     } catch (err) {
-      setError('Booking failed. Please try again.');
+      console.error('Booking error:', err);
+      setError(err.response?.data?.message || 'Failed to create booking. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (loading) return <div className="text-center py-10">Loading booking details...</div>;
+  if (!user) {
+    return <div className="text-center py-10 text-red-600">Please log in to proceed with booking.</div>;
+  }
+
+  if (loading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
+  if (!packageDetails) return <div className="text-center py-10">Package not found</div>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gradient-to-r from-yellow-100 to-pink-100 p-8">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Book Package: {pkg?.name}</h1>
-      <form className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md" onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block mb-1 font-semibold">Name</label>
-          <input type="text" name="name" value={form.name} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+        <div className="p-8">
+          <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold mb-4">
+            Package Details
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{packageDetails.name}</h2>
+          <p className="text-gray-600 mb-6">{packageDetails.description}</p>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Number of Adults</label>
+                <input
+                  type="number"
+                  name="adults"
+                  min="1"
+                  value={formData.adults}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Number of Children</label>
+                <input
+                  type="number"
+                  name="children"
+                  min="0"
+                  value={formData.children}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Travel Date</label>
+              <input
+                type="date"
+                name="travelDate"
+                value={formData.travelDate}
+                onChange={handleInputChange}
+                min={new Date().toISOString().split('T')[0]}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Special Requirements</label>
+              <textarea
+                name="specialRequirements"
+                value={formData.specialRequirements}
+                onChange={handleInputChange}
+                rows="3"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-lg font-medium text-gray-900">Cost Breakdown</h3>
+              <div className="mt-2 space-y-2">
+                <p className="text-gray-600">
+                  Adults ({formData.adults}): ₹{packageDetails.price * formData.adults}
+                </p>
+                {formData.children > 0 && (
+                  <p className="text-gray-600">
+                    Children ({formData.children}): ₹{(packageDetails.price * 0.5) * formData.children}
+                  </p>
+                )}
+                <p className="text-lg font-bold text-gray-900">
+                  Total: ₹{calculateTotalCost()}
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+            >
+              {submitting ? 'Processing...' : 'Proceed to Payment'}
+            </button>
+          </form>
         </div>
-        <div className="mb-4">
-          <label className="block mb-1 font-semibold">Email</label>
-          <input type="email" name="email" value={form.email} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-1 font-semibold">Phone</label>
-          <input type="tel" name="phone" value={form.phone} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-1 font-semibold">Date</label>
-          <input type="date" name="date" value={form.date} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
-        </div>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition" disabled={submitting}>
-          {submitting ? 'Booking...' : 'Proceed to Payment'}
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
 
-export default Booking; 
+export default Booking;
