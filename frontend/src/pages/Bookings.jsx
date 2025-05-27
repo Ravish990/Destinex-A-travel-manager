@@ -397,7 +397,7 @@ const Bookings = () => {
             }}
           >
             {/* Destinex Logo Centered */}
-            <div className="mb-6 flex flex-col items-center">
+            <div className="mb-6 flex flex-col items-center" style={{marginTop: "20px"}}>
               <img
                 src="/images/logo.png"
                 alt="Destinex Logo"

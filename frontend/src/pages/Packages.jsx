@@ -314,7 +314,7 @@ const Packages = () => {
           }}
         >
           {/* Destinex Logo Centered */}
-          <div className="mb-6 flex flex-col items-center">
+          <div className="mb-6 flex flex-col items-center" style ={{ marginTop: "20px" }}>
             <img
               src="/images/logo.png"
               alt="Destinex Logo"
@@ -381,7 +381,7 @@ const Packages = () => {
           </div>
           {/* Copyright Bar */}
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm w-full">
-            <p>Destinex © 2025. All rights reserved.</p>
+            <p >Destinex © 2025. All rights reserved.</p>
           </div>
         </div>
       </footer>
