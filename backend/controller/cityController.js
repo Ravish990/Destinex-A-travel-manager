@@ -4,7 +4,7 @@ const Destination = require('../db/models/destinationModel');
 // Get all cities
 const getAllCities = async (req, res) => {
   try {
-    const cities = await City.find();
+    const cities = await City.find().limit(9);
     res.status(200).json({ message: 'Cities fetched successfully', data: cities });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching cities', error: error.message });

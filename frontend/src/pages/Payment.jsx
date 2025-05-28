@@ -123,10 +123,12 @@ const Payment = () => {
               packageId: packageId,
               bookingDetails: {
                 ...bookingDetails,
-                userId: user._id || user.userId, // Handle both formats
+                userId: user._id || user.userId,
                 userName: user.name,
                 userEmail: user.email,
-                userPhone: user.phone
+                userPhone: user.phone,
+                duration: bookingDetails.duration,
+                groupType: bookingDetails.groupType
               }
             });
 
