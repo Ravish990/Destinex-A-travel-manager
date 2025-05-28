@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axios';
 import { useAuth } from '../context/AuthContext';
 import './PackagePlanner.css';
 
@@ -20,7 +20,7 @@ const PackagePlanner = () => {
 
   useEffect(() => {
     // Fetch package details
-    axios.get(`http://localhost:8000/packages/${packageId}`)
+    axios.get(`/packages/${packageId}`)
       .then(res => {
         setPackageDetails(res.data);
         setLoading(false);
@@ -80,7 +80,7 @@ const PackagePlanner = () => {
 
       console.log('Sending booking data:', bookingData); // Debug log
 
-      const response = await axios.post('http://localhost:8000/booking/bookings', bookingData);
+      const response = await axios.post('/booking/bookings', bookingData);
       
       if (response.data) {
         navigate(`/payment/${packageId}`, {

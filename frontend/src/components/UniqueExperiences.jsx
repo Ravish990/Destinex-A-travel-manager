@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './UniqueExperiences.css';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axios';
 
 const UniqueExperiences = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const UniqueExperiences = () => {
     const fetchExperiences = async () => {
       try {
         console.log('Fetching experiences...');
-        const response = await axios.get('http://localhost:8000/destination/places?limit=30');
+        const response = await axios.get('/destination/places?limit=30');
         console.log('API Response:', response.data);
         
         if (response.data && response.data.data) {
