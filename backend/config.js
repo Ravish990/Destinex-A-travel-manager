@@ -7,6 +7,6 @@ module.exports = {
   razorpayKeyId: process.env.RAZORPAY_KEY_ID,
   razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET,
   frontendURL: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL 
+    ? ['https://destinex-frontend.onrender.com', 'http://localhost:5173']
     : 'http://localhost:5173'
 }; 

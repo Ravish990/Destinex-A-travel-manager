@@ -12,7 +12,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: config.frontendURL,
+  origin: Array.isArray(config.frontendURL) ? config.frontendURL : [config.frontendURL],
   credentials: true
 }));
 
