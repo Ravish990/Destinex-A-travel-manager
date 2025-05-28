@@ -105,9 +105,6 @@ const PackagePlanner = () => {
   if (!packageDetails) return <div className="text-center py-10">Package not found</div>;
 
   return (
-    <div className="planner-page">
-      <h2>Book Your {packageDetails.name} Experience</h2>
-
       <div className="booking-form">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
@@ -184,7 +181,6 @@ const PackagePlanner = () => {
           </button>
         </form>
       </div>
-    </div>
   );
 };
 
