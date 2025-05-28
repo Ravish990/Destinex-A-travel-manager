@@ -6,6 +6,7 @@ import Footer from './Footer';
 import Navbar from './Navbar';
 import PopularDestinationsIndia from './PopularDestinationsIndia';
 import UniqueExperiences from './UniqueExperiences';
+
 function Home() {
   return (
     <>
@@ -13,8 +14,7 @@ function Home() {
       <HeroSection />
       <PopularDestinationsIndia />
       <Cards />
-       <UniqueExperiences />
-       
+      <UniqueExperiences />
       <Footer />
     </>
   );

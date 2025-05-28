@@ -7,19 +7,39 @@ const mongoose = require('mongoose'); // Import mongoose
 // ... existing code ...
 
 const createBooking = async (req, res) => {
-    const { userId, destinationId, bookingDate } = req.body;
+    const { 
+        userId, 
+        packageId, 
+        destinationId,
+        adults,
+        children,
+        travelDate,
+        specialRequirements,
+        groupType,
+        duration,
+        totalAmount,
+        status 
+    } = req.body;
 
     try {
         const newBooking = new bookingSchema({
             userId,
+            packageId,
             destinationId,
-            bookingDate
+            numberOfPeople: (adults || 1) + (children || 0),
+            totalPrice: totalAmount,
+            travelDate,
+            specialRequirements,
+            groupType,
+            duration,
+            status: status || 'pending'
         });
 
         await newBooking.save();
 
         res.status(201).json({ success: true, message: 'Booking created successfully', booking: newBooking });
     } catch (error) {
+        console.error('Error creating booking:', error);
         res.status(500).json({ success: false, message: 'Error creating booking', error: error.message });
     }
 }

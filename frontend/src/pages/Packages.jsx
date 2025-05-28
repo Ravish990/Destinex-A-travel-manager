@@ -95,7 +95,7 @@ const Packages = () => {
   return (
     <>
       {/* Add the CSS styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes slideIn {
           from {
             opacity: 0;

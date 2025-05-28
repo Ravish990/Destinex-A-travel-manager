@@ -38,7 +38,7 @@ const PackageDetail = () => {
 
   const handleBooking = () => {
     if (pkg && pkg._id) {
-      navigate(`/booking/${pkg._id}`);
+      navigate(`/package-planner/${pkg._id}`);
     } else {
       console.error("Package ID is undefined");
     }
