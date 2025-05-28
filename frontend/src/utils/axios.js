@@ -1,15 +1,10 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.PROD 
-  ? import.meta.env.VITE_API_URL 
-  : 'http://localhost:8000';
-
 const instance = axios.create({
-  baseURL,
-  withCredentials: true,
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 // Add a request interceptor
@@ -17,9 +12,7 @@ instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Add token in both formats for compatibility
-      config.headers['Authorization'] = `Bearer ${token}`;
-      config.headers['x-access-token'] = token;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

@@ -71,7 +71,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post('/user/login-email', {
+      const response = await axios.post('/auth/login', {
         email: formData.email,
         password: formData.password
       });
