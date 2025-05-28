@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axios';
 import './PopularDestinationsIndia.css';
 
-function PopularDestinationsIndia() {
-  const navigate = useNavigate();
+const PopularDestinationsIndia = () => {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/destination/places/popular');
-        // Limit to 8 destinations
-        setDestinations(response.data.data.slice(0, 8));
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching destinations:', error);
-        setError('Failed to load destinations');
+        const response = await axios.get('/destination/places/popular');
+        setDestinations(response.data.data || []);
+      } catch (err) {
+        setError('Failed to load popular destinations');
+      } finally {
         setLoading(false);
       }
     };
@@ -70,6 +68,6 @@ function PopularDestinationsIndia() {
       </div>
     </div>
   );
-}
+};
 
 export default PopularDestinationsIndia;

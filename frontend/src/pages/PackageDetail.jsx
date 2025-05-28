@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/axios";
 import {
   Calendar,
   MapPin,
@@ -29,7 +29,7 @@ const tabs = [
 
 const PackageDetail = () => {
   const { id } = useParams();
-  const [pkg, setPkg] = useState(null);
+  const [packageDetails, setPackageDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
@@ -37,8 +37,8 @@ const PackageDetail = () => {
   const navigate = useNavigate();
 
   const handleBooking = () => {
-    if (pkg && pkg._id) {
-      navigate(`/package-planner/${pkg._id}`);
+    if (packageDetails && packageDetails._id) {
+      navigate(`/package-planner/${packageDetails._id}`);
     } else {
       console.error("Package ID is undefined");
     }
@@ -58,16 +58,13 @@ const PackageDetail = () => {
 
   // Fetch package details
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get(`http://localhost:8000/packages/${id}`)
-      .then((res) => {
-        setPkg(res.data);
+    axios.get(`/packages/${id}`)
+      .then(res => {
+        setPackageDetails(res.data);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error("Error fetching package:", err);
-        setError("Failed to load package details");
+      .catch(err => {
+        setError('Failed to fetch package details');
         setLoading(false);
       });
   }, [id]);
@@ -103,7 +100,7 @@ const PackageDetail = () => {
       </div>
     );
 
-  if (!pkg)
+  if (!packageDetails)
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center">
@@ -232,7 +229,7 @@ const PackageDetail = () => {
                 About This Package
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                {pkg.description ||
+                {packageDetails.description ||
                   "Experience an unforgettable journey through breathtaking landscapes and immerse yourself in local culture. This carefully crafted package offers the perfect balance of adventure, relaxation, and authentic experiences."}
               </p>
             </div>
@@ -269,7 +266,7 @@ const PackageDetail = () => {
               Day-by-Day Itinerary
             </h3>
             <div className="space-y-4">
-              {(pkg.itinerary || dummyItinerary).map((day, index) => (
+              {(packageDetails.itinerary || dummyItinerary).map((day, index) => (
                 <div
                   key={index}
                   className="border-l-4 border-blue-500 pl-4 pb-6 relative"
@@ -294,7 +291,7 @@ const PackageDetail = () => {
                 Inclusions
               </h3>
               <ul className="space-y-2">
-                {(pkg.inclusions || inclusions).map((item, index) => (
+                {(packageDetails.inclusions || inclusions).map((item, index) => (
                   <li key={index} className="flex items-start">
                     <Check
                       size={16}
@@ -312,7 +309,7 @@ const PackageDetail = () => {
                 Exclusions
               </h3>
               <ul className="space-y-2">
-                {(pkg.exclusions || exclusions).map((item, index) => (
+                {(packageDetails.exclusions || exclusions).map((item, index) => (
                   <li key={index} className="flex items-start">
                     <X
                       size={16}
@@ -333,7 +330,7 @@ const PackageDetail = () => {
               Additional Information
             </h3>
             <div className="space-y-5">
-              {(pkg.additionalInfo || additionalInfo).map((info, index) => (
+              {(packageDetails.additionalInfo || additionalInfo).map((info, index) => (
                 <div
                   key={index}
                   className="border-b border-gray-200 pb-4 last:border-0"
@@ -359,7 +356,7 @@ const PackageDetail = () => {
         <div
           className="absolute inset-0 bg-cover bg-center transform scale-110 transition-all duration-[1000ms] ease-out group-hover:scale-105"
           style={{
-            backgroundImage: `url('${pkg.image || "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"}')`,
+            backgroundImage: `url('${packageDetails.image || "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"}')`,
             transformOrigin: "center center",
             filter: "brightness(0.85) contrast(1.1) saturate(1.2)"
           }}
@@ -379,14 +376,14 @@ const PackageDetail = () => {
                   padding: "10px 20px",
 
                 }}>
-                ✈️ {pkg.category || "Adventure"}
+                ✈️ {packageDetails.category || "Adventure"}
               </span>
             </div>
 
             {/* Enhanced Title */}
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight drop-shadow-2xl leading-none">
               <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent animate-pulse-subtle">
-                {pkg.name}
+                {packageDetails.name}
               </span>
             </h1>
 
@@ -394,7 +391,7 @@ const PackageDetail = () => {
             <p className="text-xl md:text-2xl max-w-3xl mx-auto font-light leading-relaxed mb-8 drop-shadow-lg"
               style={{ color: "white", fontSize: "15px", padding: "10px 20px", marginLeft: "100px", marginRight: "100px" }}
             >
-              {pkg.shortDescription || "Discover the perfect adventure that combines exploration, relaxation, and unforgettable experiences."}
+              {packageDetails.shortDescription || "Discover the perfect adventure that combines exploration, relaxation, and unforgettable experiences."}
             </p>
 
             {/* Enhanced Quick Info Pills */}
@@ -404,7 +401,7 @@ const PackageDetail = () => {
               >
                 <Clock size={20} className="text-cyan-300 mr-3 drop-shadow-lg" />
                 <span className="text-white font-semibold text-lg">
-                  {pkg.duration} Days
+                  {packageDetails.duration} Days
                 </span>
               </div>
 
@@ -412,7 +409,7 @@ const PackageDetail = () => {
                 style={{ padding: "10px 20px" }}>
                 <MapPin size={20} className="text-emerald-300 mr-3 drop-shadow-lg" />
                 <span className="text-white font-semibold text-lg">
-                  {pkg.location || "Multiple Destinations"}
+                  {packageDetails.location || "Multiple Destinations"}
                 </span>
               </div>
 
@@ -420,7 +417,7 @@ const PackageDetail = () => {
                 style={{ padding: "10px 20px" }}>
                 <Users size={20} className="text-purple-300 mr-3 drop-shadow-lg" />
                 <span className="text-white font-semibold text-lg">
-                  Max {pkg.maxGroupSize} People
+                  Max {packageDetails.maxGroupSize} People
                 </span>
               </div>
 
@@ -428,7 +425,7 @@ const PackageDetail = () => {
                 style={{ padding: "10px 20px" }}>
                 <Star size={20} className="text-yellow-300 mr-3 drop-shadow-lg fill-current" />
                 <span className="text-white font-semibold text-lg">
-                  {pkg.rating || "4.8"} Rating
+                  {packageDetails.rating || "4.8"} Rating
                 </span>
               </div>
             </div>
@@ -527,7 +524,7 @@ const PackageDetail = () => {
                     fontSize: "14px",
                     minWidth: "220px",
                     padding: "2px 8px",
-                  }}>{pkg.name}</span>
+                  }}>{packageDetails.name}</span>
               </li>
             </ol>
           </nav>
@@ -584,7 +581,7 @@ const PackageDetail = () => {
                       key={star}
                       size={20}
                       className={
-                        star <= (pkg.rating || 4.8)
+                        star <= (packageDetails.rating || 4.8)
                           ? "text-yellow-400 fill-yellow-400"
                           : "text-gray-300"
                       }
@@ -592,7 +589,7 @@ const PackageDetail = () => {
                   ))}
                 </div>
                 <span className="ml-2 text-gray-600 font-medium">
-                  {pkg.reviewCount || 24} reviews
+                  {packageDetails.reviewCount || 24} reviews
                 </span>
               </div>
             </div>
@@ -659,7 +656,7 @@ const PackageDetail = () => {
               >
                 <div>
                   <h3 className="text-2xl font-bold text-gray-800" style={{ marginTop: "10px" }}>
-                  Package Price: ₹{pkg.price}
+                  Package Price: ₹{packageDetails.price}
                   </h3>
                   <p className="text-sm text-black">per person</p>
                 </div>
@@ -684,19 +681,19 @@ const PackageDetail = () => {
                 <div className="flex justify-between items-center mb-2" style={{ marginLeft: "50px", marginRight: "50px", marginTop: "10px" }}>
                   <span className="text-gray-600">Base Price</span>
                   <span className="font-medium" style={{ color: "black" }}>
-                    ₹{pkg.basePrice || pkg.price}
+                    ₹{packageDetails.basePrice || packageDetails.price}
                   </span>
                 </div>
                 <div className="flex justify-between items-center mb-2" style={{ marginLeft: "50px", marginRight: "50px", marginBottom: "10px" }}>
                   <span style={{ color: "black" }}>Taxes & Fees</span>
                   <span className="font-medium" style={{ color: "black" }}>
-                    ₹{pkg.taxes || Math.round(pkg.price * 0.18)}
+                    ₹{packageDetails.taxes || Math.round(packageDetails.price * 0.18)}
                   </span>
                 </div>
-                {pkg.discount && (
+                {packageDetails.discount && (
                   <div className="flex justify-between items-center text-green-600">
                     <span>Discount</span>
-                    <span className="font-medium">-₹{pkg.discount}</span>
+                    <span className="font-medium">-₹{packageDetails.discount}</span>
                   </div>
                 )}
               </div>
@@ -724,10 +721,10 @@ const PackageDetail = () => {
                 </div>
                 <div style={{ marginLeft: "10px", marginTop: "5px" }}>
                   <h5 className="font-medium text-gray-800" style={{ marginTop: "5px" }}>
-                    {pkg.guideName || "Emily Chen"}
+                    {packageDetails.guideName || "Emily Chen"}
                   </h5>
                   <p className="text-sm text-gray-500">
-                    {pkg.guideExperience || "5+ years experience"}
+                    {packageDetails.guideExperience || "5+ years experience"}
                   </p>
                 </div>
               </div>

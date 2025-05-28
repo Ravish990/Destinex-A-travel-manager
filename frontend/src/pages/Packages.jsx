@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 import { useParams, useNavigate } from "react-router-dom";
 
 const Packages = () => {
@@ -11,16 +11,13 @@ const Packages = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(
-        `http://localhost:8000/destination/destinations/${destinationId}/packages`
-      )
-      .then((res) => {
+    axios.get(`/destination/destinations/${destinationId}/packages`)
+      .then(res => {
         setPackages(res.data.data || []);
         setLoading(false);
       })
-      .catch((err) => {
-        setError("Failed to fetch packages");
+      .catch(err => {
+        setError('Failed to fetch packages');
         setLoading(false);
       });
   }, [destinationId]);
