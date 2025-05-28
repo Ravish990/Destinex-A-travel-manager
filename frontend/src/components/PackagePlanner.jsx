@@ -101,7 +101,7 @@ const PackagePlanner = () => {
   };
 
   const handleBackClick = () => {
-    navigate(-1); // Go back to previous page
+    navigate(`/package/${packageId}`);
   };
 
   if (loading) return <div className="text-center py-10">Loading...</div>;
