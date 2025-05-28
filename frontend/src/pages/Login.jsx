@@ -127,7 +127,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post('/user/send-otp', {
+      const response = await axios.post('/auth/send-otp', {
         phoneNumber: formData.phoneNumber
       });
       
@@ -154,7 +154,7 @@ const LoginPage = ({ setIsActive, showForgotPassword }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post('/user/verify-otp', {
+      const response = await axios.post('/auth/verify-otp', {
         phoneNumber: formData.phoneNumber,
         otp: formData.otp
       });
