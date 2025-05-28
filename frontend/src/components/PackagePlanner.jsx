@@ -100,11 +100,36 @@ const PackagePlanner = () => {
     }
   };
 
+  const handleBackClick = () => {
+    navigate(-1); // Go back to previous page
+  };
+
   if (loading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
   if (!packageDetails) return <div className="text-center py-10">Package not found</div>;
 
   return (
+    <div className="planner-page">
+      {/* Header Section */}
+      <div className="planner-header">
+        <div className="header-content">
+          <button onClick={handleBackClick} className="back-button">
+            BACK
+          </button>
+          <div className="header-title-section">
+            <h1 className="header-main-title">
+              Book Your <span className="highlight">Experience</span>
+            </h1>
+            <p className="header-subtitle">Complete your booking with confidence and security</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Package Title Section */}
+      <div className="package-title-section">
+        <h2>Book Your {packageDetails.name} Experience</h2>
+      </div>
+      
       <div className="booking-form">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
@@ -184,4 +209,4 @@ const PackagePlanner = () => {
   );
 };
 
-export default PackagePlanner; 
+export default PackagePlanner;

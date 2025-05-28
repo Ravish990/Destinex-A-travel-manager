@@ -15,43 +15,34 @@ const Payment = () => {
   const bookingDetails = location.state?.bookingDetails;
 
   useEffect(() => {
-    console.log('Payment Component - Auth State:', { isAuthenticated, user }); // Debug log
-    console.log('Payment Component - Booking Details:', bookingDetails); // Debug log
-
     if (!isAuthenticated || !user) {
-      console.log('User not authenticated, redirecting to login'); // Debug log
       navigate('/login', { state: { from: location.pathname } });
       return;
     }
 
     if (!bookingDetails) {
-      console.log('No booking details, redirecting to package'); // Debug log
       navigate(`/package/${packageId}`);
       return;
     }
 
-    // Load Razorpay script
     const loadRazorpay = async () => {
       try {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
-        
+
         script.onload = () => {
-          console.log('Razorpay script loaded successfully');
           setRazorpayLoaded(true);
           setLoading(false);
         };
-        
+
         script.onerror = () => {
-          console.error('Failed to load Razorpay script');
           setError('Failed to load payment gateway. Please try again.');
           setLoading(false);
         };
 
         document.body.appendChild(script);
       } catch (error) {
-        console.error('Error loading Razorpay:', error);
         setError('Failed to initialize payment gateway. Please try again.');
         setLoading(false);
       }
@@ -68,11 +59,7 @@ const Payment = () => {
   }, [packageId, navigate, isAuthenticated, user, bookingDetails, location]);
 
   const handlePayment = async () => {
-    console.log('Starting payment process...'); // Debug log
-    console.log('Current user:', user); // Debug log
-
     if (!isAuthenticated || !user) {
-      console.log('User not authenticated during payment'); // Debug log
       navigate('/login', { state: { from: location.pathname } });
       return;
     }
@@ -86,20 +73,17 @@ const Payment = () => {
     setError(null);
 
     try {
-      // Create order on your backend
       const orderData = await axios.post('/payment/create-order', {
-        amount: bookingDetails.totalCost * 100, // amount in paise
+        amount: bookingDetails.totalCost * 100,
         packageId: packageId,
         bookingDetails: {
           ...bookingDetails,
-          userId: user._id || user.userId, // Handle both formats
+          userId: user._id || user.userId,
           userName: user.name,
           userEmail: user.email,
           userPhone: user.phone
         }
       });
-
-      console.log('Order created:', orderData.data); // Debug log
 
       if (!orderData.data) {
         throw new Error('Failed to create order');
@@ -113,9 +97,7 @@ const Payment = () => {
         description: `Payment for ${bookingDetails.packageDetails.name}`,
         order_id: orderData.data.data.id,
         handler: async function (response) {
-          console.log('Payment response:', response); // Debug log
           try {
-            // Verify payment on your backend
             const verification = await axios.post('/payment/verify', {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
@@ -132,8 +114,6 @@ const Payment = () => {
               }
             });
 
-            console.log('Payment verification:', verification.data); // Debug log
-
             if (verification.data.success) {
               alert('Payment successful!');
               navigate('/bookings');
@@ -141,7 +121,6 @@ const Payment = () => {
               throw new Error('Payment verification failed');
             }
           } catch (error) {
-            console.error('Payment verification error:', error);
             setError('Payment verification failed. Please contact support.');
             setProcessingPayment(false);
           }
@@ -152,25 +131,23 @@ const Payment = () => {
           contact: user.phone || ""
         },
         theme: {
-          color: "#3399cc"
+          color: "#22c55e"
         },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             setProcessingPayment(false);
           }
         }
       };
 
       const paymentObject = new window.Razorpay(options);
-      paymentObject.on('payment.failed', function (response) {
-        console.error('Payment failed:', response.error);
+      paymentObject.on('payment.failed', function () {
         setError('Payment failed. Please try again.');
         setProcessingPayment(false);
       });
-      
+
       paymentObject.open();
     } catch (error) {
-      console.error('Payment error:', error);
       setError(error.response?.data?.message || 'Payment failed. Please try again.');
       setProcessingPayment(false);
     }
@@ -243,7 +220,7 @@ const Payment = () => {
 
         {/* Back Button - Positioned absolutely */}
         <button 
-          onClick={() => navigate(`/package/${packageId}`)}
+          onClick={() => navigate(`/package-planner/${packageId}`)}
           className="absolute top-6 left-6 z-50 flex items-center font-bold uppercase text-white shadow-lg px-6 py-2"
           style={{
             background: 'linear-gradient(90deg, #ffb300 0%, #ff7300 100%)',
