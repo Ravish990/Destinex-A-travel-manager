@@ -22,7 +22,7 @@ const PhoneVerification = ({ onVerificationComplete }) => {
         try {
             setLoading(true);
             setMessage('');
-            const response = await axios.post('/user/send-otp', { phoneNumber });
+            const response = await axios.post('/auth/send-otp', { phoneNumber });
 
             if(response.data.success){
                 setOtpSent(true);
@@ -48,7 +48,7 @@ const PhoneVerification = ({ onVerificationComplete }) => {
             setLoading(true);
             setMessage('');
             console.log("Request Body : ",{phoneNumber, otp});
-            const response = await axios.post('/user/verify-otp', { phoneNumber, otp });
+            const response = await axios.post('/auth/verify-otp', { phoneNumber, otp });
 
             if(response.data.success){
                 setMessage('OTP Verified Successfully');
@@ -73,7 +73,7 @@ const PhoneVerification = ({ onVerificationComplete }) => {
         try {
             setLoading(true);
             setMessage('');
-            const response = await axios.post('/user/send-otp', { phoneNumber });
+            const response = await axios.post('/auth/send-otp', { phoneNumber });
 
             if(response.data.success){
                 setOtpSent(true);
