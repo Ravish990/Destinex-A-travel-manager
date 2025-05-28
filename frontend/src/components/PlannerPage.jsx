@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axios';
 import './PlannerPage.css';
 
 const PlannerPage = () => {
@@ -31,7 +31,7 @@ const PlannerPage = () => {
         console.log('Fetching destination:', formattedLocation);
         
         // First get all destinations
-        const destResponse = await axios.get(`http://localhost:8000/destination/places`);
+        const destResponse = await axios.get(`/destination/places`);
         console.log('All destinations:', destResponse.data);
         
         if (destResponse.data.data && destResponse.data.data.length > 0) {
@@ -45,7 +45,7 @@ const PlannerPage = () => {
             const destinationId = destination._id;
             
             // Then get packages for this destination
-            const packagesResponse = await axios.get(`http://localhost:8000/destination/destinations/${destinationId}/packages`);
+            const packagesResponse = await axios.get(`/destination/destinations/${destinationId}/packages`);
             console.log('Packages response:', packagesResponse.data);
             
             if (packagesResponse.data && packagesResponse.data.data) {
@@ -63,12 +63,8 @@ const PlannerPage = () => {
           setError('No destinations available');
         }
       } catch (error) {
-        console.error('Error details:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status
-        });
-        setError(error.response?.data?.message || 'Error fetching packages');
+        console.error('Error fetching packages:', error);
+        setError('Failed to fetch packages');
       } finally {
         setLoading(false);
       }
