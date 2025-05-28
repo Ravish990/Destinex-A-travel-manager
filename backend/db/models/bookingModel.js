@@ -6,18 +6,14 @@ const bookingSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    destinationId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Destination',
-        required: true
-    },
-    bookingDate: {
-        type: Date,
-        default: Date.now
-    },
     packageId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Package',
+        required: true
+    },
+    destinationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Destination',
         required: true
     },
     numberOfPeople: {
@@ -26,6 +22,23 @@ const bookingSchema = new mongoose.Schema({
     },
     totalPrice: {
         type: Number,
+        required: true
+    },
+    travelDate: {
+        type: Date,
+        required: true
+    },
+    specialRequirements: {
+        type: String,
+        default: ''
+    },
+    groupType: {
+        type: String,
+        enum: ['Couple', 'Family', 'Friends', 'Solo'],
+        required: true
+    },
+    duration: {
+        type: String,
         required: true
     },
     status: {

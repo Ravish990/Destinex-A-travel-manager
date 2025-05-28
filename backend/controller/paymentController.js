@@ -88,13 +88,15 @@ exports.verifyPayment = async (req, res) => {
           adults: bookingDetails.adults || 1,
           children: bookingDetails.children || 0,
           travelDate: bookingDetails.travelDate,
-          specialRequirements: bookingDetails.specialRequirements,
+          specialRequirements: bookingDetails.specialRequirements || '',
           totalPrice: bookingDetails.totalCost,
           numberOfPeople: (bookingDetails.adults || 1) + (bookingDetails.children || 0),
           destinationId: bookingDetails.packageDetails.destination,
           status: 'confirmed',
           paymentId: razorpay_payment_id,
-          orderId: razorpay_order_id
+          orderId: razorpay_order_id,
+          duration: bookingDetails.packageDetails.duration || '7 Days', // Default duration
+          groupType: 'Family' // Default group type
         });
 
         console.log('Booking created:', booking); // Debug log
