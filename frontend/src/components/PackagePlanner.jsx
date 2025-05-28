@@ -160,17 +160,17 @@ const PackagePlanner = () => {
           </div>
 
           <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="text-lg font-medium text-gray-900">Cost Breakdown</h3>
+            <h3 className="text-lg font-medium text-gray-900 text-black">Cost Breakdown</h3>
             <div className="mt-2 space-y-2">
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-black">
                 Adults ({formData.adults}): ₹{packageDetails.price * formData.adults}
               </p>
               {formData.children > 0 && (
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-black">
                   Children ({formData.children}): ₹{(packageDetails.price * 0.5) * formData.children}
                 </p>
               )}
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-lg font-bold text-gray-900 text-black">
                 Total: ₹{calculateTotalCost()}
               </p>
             </div>

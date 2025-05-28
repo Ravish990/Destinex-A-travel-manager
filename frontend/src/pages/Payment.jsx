@@ -181,44 +181,32 @@ const Payment = () => {
   if (!bookingDetails) return <div className="text-center py-10">Invalid booking details</div>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-green-100 to-blue-100 p-8">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">Payment Details</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-green-100 to-blue-100 p-4 sm:p-6 md:p-8">
+      <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-full max-w-md mx-4">
+        <h1 className="text-3xl font-bold mb-8 text-gray-800">Payment Details</h1>
         
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">{bookingDetails.packageDetails.name}</h2>
-          <p className="text-gray-600 mb-4">{bookingDetails.packageDetails.description}</p>
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-3">{bookingDetails.packageDetails.name}</h2>
+          <p className="text-gray-600 mb-6">{bookingDetails.packageDetails.description}</p>
           
-          <div className="bg-gray-50 p-4 rounded-lg mb-4">
-            <h3 className="font-semibold mb-2">Booking Summary</h3>
-            <p className="text-gray-600">Adults: {bookingDetails.adults || 1}</p>
-            <p className="text-gray-600">Children: {bookingDetails.children || 0}</p>
-            <p className="text-gray-600">Travel Date: {bookingDetails.travelDate || 'Not specified'}</p>
+          <div className="bg-gray-50 p-5 rounded-lg mb-6">
+            <h3 className="font-semibold mb-4 text-gray-800">Booking Summary</h3>
+            <div className="space-y-3">
+              <p className="text-gray-600">Adults: {bookingDetails.adults || 1}</p>
+              <p className="text-gray-600">Children: {bookingDetails.children || 0}</p>
+              <p className="text-gray-600">Travel Date: {bookingDetails.travelDate || 'Not specified'}</p>
+            </div>
           </div>
 
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-2xl font-bold text-green-600 mb-8">
             Total: ₹{bookingDetails.totalCost}
-          </div>
-        </div>
-
-        <div className="mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-          <div className="flex items-center mb-3">
-            <span className="bg-yellow-400 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded">TEST MODE</span>
-          </div>
-          <h3 className="font-semibold mb-2">Test Card Details:</h3>
-          <div className="space-y-2 text-sm text-gray-600">
-            <p><span className="font-medium">Successful Payment:</span><br />
-            Card Number: 4111 1111 1111 1111<br />
-            Expiry: Any future date<br />
-            CVV: Any 3 digits<br />
-            Name: Any name</p>
           </div>
         </div>
 
         <button
           onClick={handlePayment}
           disabled={processingPayment || !razorpayLoaded}
-          className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold disabled:bg-green-400"
+          className="w-full bg-green-600 text-white px-6 py-4 rounded-lg hover:bg-green-700 transition font-semibold disabled:bg-green-400"
         >
           {processingPayment ? 'Processing...' : 'Pay Now'}
         </button>
