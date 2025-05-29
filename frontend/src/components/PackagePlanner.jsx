@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../utils/axios';
 import { useAuth } from '../context/AuthContext';
+import toast, { Toaster } from 'react-hot-toast';
 import './PackagePlanner.css';
 
 const PackagePlanner = () => {
@@ -17,6 +18,7 @@ const PackagePlanner = () => {
     travelDate: '',
     specialRequirements: ''
   });
+  const [dateError, setDateError] = useState('');
 
   useEffect(() => {
     // Fetch package details
@@ -27,6 +29,7 @@ const PackagePlanner = () => {
       })
       .catch(err => {
         console.error('Error fetching package:', err);
+        toast.error('Failed to load package details');
         setError('Failed to load package details');
         setLoading(false);
       });
@@ -34,6 +37,30 @@ const PackagePlanner = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    if (name === 'travelDate') {
+      const selectedDate = new Date(value);
+      const today = new Date();
+      const oneYearFromNow = new Date();
+      oneYearFromNow.setFullYear(today.getFullYear() + 1);
+
+      // Reset time part for accurate date comparison
+      today.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        setDateError('Travel date cannot be in the past');
+        toast.error('Travel date cannot be in the past');
+        return;
+      } else if (selectedDate > oneYearFromNow) {
+        setDateError('Travel date cannot be more than 1 year in advance');
+        toast.error('Travel date cannot be more than 1 year in advance');
+        return;
+      } else {
+        setDateError('');
+      }
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -50,6 +77,7 @@ const PackagePlanner = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
+      toast.error('Please login to continue');
       navigate('/login');
       return;
     }
@@ -61,6 +89,7 @@ const PackagePlanner = () => {
       const userId = user._id || user.userId;
       if (!userId) {
         console.error('User data structure:', user); // Debug log
+        toast.error('User ID not found. Please log in again.');
         throw new Error('User ID not found. Please log in again.');
       }
 
@@ -83,6 +112,7 @@ const PackagePlanner = () => {
       const response = await axios.post('/booking/bookings', bookingData);
       
       if (response.data) {
+        toast.success('Booking created successfully!');
         navigate(`/payment/${packageId}`, {
           state: {
             bookingDetails: {
@@ -96,6 +126,7 @@ const PackagePlanner = () => {
       }
     } catch (err) {
       console.error('Booking error:', err);
+      toast.error(err.response?.data?.message || err.message || 'Failed to create booking. Please try again.');
       setError(err.response?.data?.message || err.message || 'Failed to create booking. Please try again.');
     }
   };
@@ -110,6 +141,28 @@ const PackagePlanner = () => {
 
   return (
     <div className="planner-page">
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: '#4aed88',
+            },
+          },
+          error: {
+            duration: 4000,
+            theme: {
+              primary: '#ff4b4b',
+            },
+          },
+        }}
+      />
       {/* Header Section */}
       <div className="planner-header">
         <div className="header-content">
@@ -165,9 +218,14 @@ const PackagePlanner = () => {
               name="travelDate"
               value={formData.travelDate}
               onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${dateError ? 'border-red-500' : ''}`}
               required
+              min={new Date().toISOString().split('T')[0]}
+              max={new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0]}
             />
+            {dateError && (
+              <p className="mt-1 text-sm text-red-600">{dateError}</p>
+            )}
           </div>
 
           <div>

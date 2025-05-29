@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../utils/axios';
 import { useAuth } from '../context/AuthContext';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Payment = () => {
   const { packageId } = useParams();
@@ -16,11 +17,13 @@ const Payment = () => {
 
   useEffect(() => {
     if (!isAuthenticated || !user) {
+      toast.error('Please login to continue');
       navigate('/login', { state: { from: location.pathname } });
       return;
     }
 
     if (!bookingDetails) {
+      toast.error('No booking details found');
       navigate(`/package/${packageId}`);
       return;
     }
@@ -37,12 +40,14 @@ const Payment = () => {
         };
 
         script.onerror = () => {
+          toast.error('Failed to load payment gateway. Please try again.');
           setError('Failed to load payment gateway. Please try again.');
           setLoading(false);
         };
 
         document.body.appendChild(script);
       } catch (error) {
+        toast.error('Failed to initialize payment gateway. Please try again.');
         setError('Failed to initialize payment gateway. Please try again.');
         setLoading(false);
       }
@@ -60,11 +65,13 @@ const Payment = () => {
 
   const handlePayment = async () => {
     if (!isAuthenticated || !user) {
+      toast.error('Please login to continue');
       navigate('/login', { state: { from: location.pathname } });
       return;
     }
 
     if (!razorpayLoaded) {
+      toast.error('Payment gateway is not ready. Please try again.');
       setError('Payment gateway is not ready. Please try again.');
       return;
     }
@@ -115,12 +122,13 @@ const Payment = () => {
             });
 
             if (verification.data.success) {
-              alert('Payment successful!');
+              toast.success('Payment successful!');
               navigate('/bookings');
             } else {
               throw new Error('Payment verification failed');
             }
           } catch (error) {
+            toast.error('Payment verification failed. Please contact support.');
             setError('Payment verification failed. Please contact support.');
             setProcessingPayment(false);
           }
@@ -142,12 +150,14 @@ const Payment = () => {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.on('payment.failed', function () {
+        toast.error('Payment failed. Please try again.');
         setError('Payment failed. Please try again.');
         setProcessingPayment(false);
       });
 
       paymentObject.open();
     } catch (error) {
+      toast.error(error.response?.data?.message || 'Payment failed. Please try again.');
       setError(error.response?.data?.message || 'Payment failed. Please try again.');
       setProcessingPayment(false);
     }
@@ -207,6 +217,28 @@ const Payment = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: '#4aed88',
+            },
+          },
+          error: {
+            duration: 4000,
+            theme: {
+              primary: '#ff4b4b',
+            },
+          },
+        }}
+      />
       {/* Header Section */}
       <div className="relative overflow-hidden w-full min-h-[200px] flex items-center justify-center">
         {/* Gradient Background */}
