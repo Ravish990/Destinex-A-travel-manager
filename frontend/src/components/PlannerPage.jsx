@@ -29,25 +29,25 @@ const PlannerPage = () => {
       setError(null);
       try {
         console.log('Fetching destination:', formattedLocation);
-        
+
         // First get all destinations
         const destResponse = await axios.get(`/destination/places`);
         console.log('All destinations:', destResponse.data);
-        
+
         if (destResponse.data.data && destResponse.data.data.length > 0) {
           // Find the destination that matches our search term (case-insensitive)
           const destination = destResponse.data.data.find(
             dest => dest.name.toLowerCase().includes(formattedLocation.toLowerCase())
           );
-          
+
           if (destination) {
             console.log('Found destination:', destination);
             const destinationId = destination._id;
-            
+
             // Then get packages for this destination
             const packagesResponse = await axios.get(`/destination/destinations/${destinationId}/packages`);
             console.log('Packages response:', packagesResponse.data);
-            
+
             if (packagesResponse.data && packagesResponse.data.data) {
               console.log('Setting packages:', packagesResponse.data.data);
               setPackages(packagesResponse.data.data);
@@ -56,7 +56,7 @@ const PlannerPage = () => {
               setError('No packages found for this destination');
             }
           } else {
-            setError('Destination not found. Available destinations: ' + 
+            setError('Destination not found. Available destinations: ' +
               destResponse.data.data.map(d => d.name).join(', '));
           }
         } else {
@@ -102,7 +102,7 @@ const PlannerPage = () => {
         const min = parseInt(durationNumbers[1]);
         const max = durationNumbers[2] ? parseInt(durationNumbers[2]) : null;
         console.log('Duration range:', { min, max, packageDuration: pkg.duration });
-        
+
         if (currentSelection.duration.includes('+')) {
           durationMatch = pkg.duration >= min;
         } else {
@@ -188,7 +188,9 @@ const PlannerPage = () => {
 
       {step === 3 && (
         <div className="results-wrapper">
-          <div className="results-heading">
+          <div className="results-heading" style={{
+            marginTop: '35px'
+          }}>
             <h2>Holiday Plan Summary</h2>
             <p>
               Destination: <strong>{latestTrip.destination}</strong> <br />
