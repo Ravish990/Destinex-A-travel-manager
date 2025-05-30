@@ -104,7 +104,7 @@ const Signup = ({ setIsActive, onSignupSuccess }) => {
 
         setLoading(true);
         try {
-            const response = await axios.post('/user/signup', formData);
+            const response = await axios.post('/auth/signup', formData);
 
             if (response.data.success) {
                 setSuccess('Account created successfully!');
